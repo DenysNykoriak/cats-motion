@@ -1,7 +1,7 @@
 "use client";
 
 import classNames from "classnames";
-import { motion } from "framer-motion";
+import { motion, useAnimationControls } from "framer-motion";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import Image from "next/image";
@@ -18,66 +18,178 @@ type Props = {
 };
 
 const HomeView = ({ breeds }: Props) => {
+  const [isIntro, setIsIntro] = useState(true);
+
+  //Carousel
   const [catsCarouselWidth, setCatsCarouselWidth] = useState(0);
 
   const carouselRef = useRef<HTMLDivElement>(null);
+  const carouselContainerRef = useRef<HTMLDivElement>(null);
 
   const breedsToShow = useMemo(
     () =>
-      breeds.slice(0, 6).filter((breed) => !!breed.image) as (CatBreed & {
+      breeds.filter((breed) => !!breed.image) as (CatBreed & {
         image: NonNullable<CatBreed["image"]>;
       })[],
     [breeds],
   );
 
   useEffect(() => {
-    if (!carouselRef.current) return;
+    if (!carouselRef.current || !carouselContainerRef.current) return;
 
     setCatsCarouselWidth(
-      carouselRef.current.scrollWidth - carouselRef.current.offsetWidth,
+      carouselRef.current.scrollWidth -
+        carouselContainerRef.current.offsetWidth,
     );
-  }, []);
+  }, [breeds]);
+
+  //---
+  const introControls = useAnimationControls();
+
+  const handleIntroClose = () => {
+    if (!isIntro) {
+      // TODO: delete this after intro animations will be ready
+      setIsIntro(true);
+      introControls.start("initial");
+
+      return;
+    }
+
+    setIsIntro(false);
+    introControls.start("closeIntro");
+  };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between relative">
+    <div
+      className="min-h-screen flex flex-col justify-between relative"
+      onClick={handleIntroClose}
+    >
       <header className="flex justify-between pt-14 px-12">
         <Logo />
         <span className="cursor-pointer">ABOUT</span>
       </header>
       <main>
         {/* Header Components */}
-        <h1 className="text-3xl absolute font-lato font-bold top-20 mx-auto left-1/3">
+        <motion.h1
+          className="absolute font-lato font-bold mx-auto"
+          initial="initial"
+          variants={{
+            initial: {
+              left: "20%",
+              top: "30%",
+              fontSize: "90px",
+            },
+            closeIntro: {
+              left: "33%",
+              top: "80px",
+              fontSize: "30px",
+              transition: {
+                duration: 1,
+              },
+            },
+          }}
+          animate={introControls}
+        >
           CATS
-          <sup className="text-sm font-normal absolute -right-[calc(100%+8px)] top-[-1px]">
-            10 BREEDS
-          </sup>
-        </h1>
-        <h1 className="text-3xl absolute font-cormorant-garamond top-[120px] left-1/3 mx-auto">
+          <div className="overflow-hidden absolute -right-[calc(100%+8px)] top-0 flex items-start">
+            <motion.sup
+              className="text-sm font-normal top-0 leading-4"
+              initial="initial"
+              variants={{
+                initial: { transform: "translateY(100%)" },
+                closeIntro: {
+                  transform: "translateY(0%)",
+                  transition: {
+                    duration: 0.5,
+                    delay: 1,
+                  },
+                },
+              }}
+              animate={introControls}
+            >
+              {breeds.length} BREEDS
+            </motion.sup>
+          </div>
+        </motion.h1>
+        {/* TODO: change top: 45% to make it connected with title above */}
+        <motion.h1
+          className="text-3xl absolute font-cormorant-garamond mx-auto"
+          initial="initial"
+          variants={{
+            initial: {
+              left: "20%",
+              top: "45%",
+              fontSize: "90px",
+            },
+            closeIntro: {
+              left: "33%",
+              top: "120px",
+              fontSize: "30px",
+              transition: {
+                duration: 1,
+              },
+            },
+          }}
+          animate={introControls}
+        >
           - in Motion
-        </h1>
+        </motion.h1>
 
         {/* Slides */}
-        <div className="absolute top-1/4 w-full h-1/2 overflow-hidden">
+        <div
+          className="absolute flex items-center justify-end h-2/3 top-[20%] overflow-hidden w-screen"
+          ref={carouselContainerRef}
+        >
           <motion.div
-            className="flex gap-12 h-full px-12"
-            ref={carouselRef}
-            drag="x"
-            dragConstraints={{ right: 0, left: -catsCarouselWidth - 48 }}
+            className="overflow-hidden flex items-center"
+            initial="initial"
+            variants={{
+              initial: { width: "0%", height: "0%" },
+              closeIntro: {
+                width: "100%",
+                height: ["0%", "10%", "100%"],
+                transition: {
+                  duration: 0.8,
+                  delay: 0.7,
+                },
+              },
+            }}
+            animate={introControls}
           >
-            {breedsToShow.map((breed) => (
-              <div
-                key={breed.id}
-                className="w-1/4 min-w-[27vw] h-full relative bg-primary"
-              >
-                <Image
-                  className="pointer-events-none"
-                  src={breed.image.url}
-                  alt={breed.name}
-                  fill
-                  objectFit="cover"
-                />
-              </div>
-            ))}
+            <motion.div
+              className="flex gap-12 h-[66vh] px-12 items-center cursor-grab active:cursor-grabbing"
+              ref={carouselRef}
+              drag="x"
+              dragConstraints={{ right: 0, left: -catsCarouselWidth - 48 }}
+              dragElastic={0.1}
+              variants={{
+                closeIntro: {
+                  x: ["0%", "-5%"],
+                  transition: {
+                    duration: 1.5,
+                    delay: 0.7,
+                  },
+                },
+              }}
+              animate={introControls}
+            >
+              {breedsToShow.map((breed, index) => (
+                <div
+                  key={breed.id}
+                  className={classNames(
+                    "min-w-[32vw] relative bg-primary",
+                    index % 2 === 0 ? "h-full" : "h-[90%]",
+                  )}
+                >
+                  <Image
+                    className="pointer-events-none object-cover"
+                    src={breed.image.url}
+                    alt={breed.name}
+                    fill
+                  />
+                </div>
+              ))}
+            </motion.div>
           </motion.div>
         </div>
 
