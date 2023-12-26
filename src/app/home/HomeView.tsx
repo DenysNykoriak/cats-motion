@@ -69,71 +69,102 @@ const HomeView = ({ breeds }: Props) => {
         <span className="cursor-pointer">ABOUT</span>
       </header>
       <main>
-        {/* Header Components */}
-        <motion.h1
-          className="absolute font-lato font-bold mx-auto"
-          initial="initial"
-          variants={{
-            initial: {
-              left: "20%",
-              top: "30%",
-              fontSize: "90px",
-            },
-            closeIntro: {
-              left: "33%",
-              top: "80px",
-              fontSize: "30px",
-              transition: {
-                duration: 1,
+        {/* Intro Center Components */}
+        <div className="flex flex-col items-start mx-[25%] w-min h-[20vh] mt-[-150px]">
+          {/* Header Components (After Intro) */}
+          <motion.h1
+            className="relative font-lato font-bold tracking-wide"
+            initial="initial"
+            variants={{
+              initial: {
+                left: "0vw",
+                top: "0%",
+                fontSize: "90px",
+                lineHeight: "85px",
               },
-            },
-          }}
-          animate={introControls}
-        >
-          CATS
-          <div className="overflow-hidden absolute -right-[calc(100%+8px)] top-0 flex items-start">
-            <motion.sup
-              className="text-sm font-normal top-0 leading-4"
-              initial="initial"
-              variants={{
-                initial: { transform: "translateY(100%)" },
-                closeIntro: {
-                  transform: "translateY(0%)",
-                  transition: {
-                    duration: 0.5,
-                    delay: 1,
-                  },
+              closeIntro: {
+                left: "3vw",
+                top: "-125%",
+                fontSize: "30px",
+                lineHeight: "30px",
+                transition: {
+                  ease: [0.75, 0, 0.5, 0.995],
+                  duration: 1,
                 },
-              }}
-              animate={introControls}
-            >
-              {breeds.length} BREEDS
-            </motion.sup>
-          </div>
-        </motion.h1>
-        {/* TODO: change top: 45% to make it connected with title above */}
-        <motion.h1
-          className="text-3xl absolute font-cormorant-garamond mx-auto"
-          initial="initial"
-          variants={{
-            initial: {
-              left: "20%",
-              top: "45%",
-              fontSize: "90px",
-            },
-            closeIntro: {
-              left: "33%",
-              top: "120px",
-              fontSize: "30px",
-              transition: {
-                duration: 1,
               },
-            },
-          }}
-          animate={introControls}
-        >
-          - in Motion
-        </motion.h1>
+            }}
+            animate={introControls}
+          >
+            CATS
+            <div className="overflow-hidden absolute -right-[calc(100%+8px)] top-0 flex items-start">
+              <motion.sup
+                className="text-sm font-normal top-0 leading-4"
+                initial="initial"
+                variants={{
+                  initial: { transform: "translateY(100%)" },
+                  closeIntro: {
+                    transform: "translateY(0%)",
+                    transition: {
+                      duration: 0.5,
+                      delay: 1,
+                    },
+                  },
+                }}
+                animate={introControls}
+              >
+                {breeds.length} BREEDS
+              </motion.sup>
+            </div>
+          </motion.h1>
+          <motion.h1
+            className="relative font-cormorant-garamond leading-none whitespace-nowrap tracking-wider"
+            initial="initial"
+            variants={{
+              initial: {
+                left: "0vw",
+                top: "0%",
+                fontSize: "90px",
+              },
+              closeIntro: {
+                left: "3vw",
+                top: "-125%",
+                fontSize: "30px",
+                transition: {
+                  ease: [0.75, 0, 0.5, 0.995],
+                  duration: 1,
+                },
+              },
+            }}
+            animate={introControls}
+          >
+            - in Motion
+          </motion.h1>
+
+          {/* Footer Components (After Intro) */}
+          <motion.h3
+            className="font-lato relative self-end leading-[85px] tracking-wide"
+            initial="initial"
+            variants={{
+              initial: {
+                left: "0vw",
+                bottom: "0%",
+                fontSize: "90px",
+              },
+              closeIntro: {
+                left: "15vw",
+                bottom: "-245%",
+                fontSize: "30px",
+                transition: {
+                  ease: [0.75, 0, 0.5, 0.995],
+                  duration: 1,
+                },
+              },
+            }}
+            animate={introControls}
+          >
+            ©{new Date().getFullYear()}
+          </motion.h3>
+        </div>
 
         {/* Slides */}
         <div
@@ -150,7 +181,7 @@ const HomeView = ({ breeds }: Props) => {
                 height: ["0%", "10%", "100%"],
                 transition: {
                   duration: 0.8,
-                  delay: 0.7,
+                  delay: 0.5,
                 },
               },
             }}
@@ -167,7 +198,7 @@ const HomeView = ({ breeds }: Props) => {
                   x: ["0%", "-5%"],
                   transition: {
                     duration: 1.5,
-                    delay: 0.7,
+                    delay: 0.5,
                   },
                 },
               }}
@@ -194,12 +225,29 @@ const HomeView = ({ breeds }: Props) => {
         </div>
 
         {/* Footer Components */}
-        <h3 className="font-cormorant-garamond text-3xl absolute bottom-9 left-14 font-light">
+        <motion.h3
+          className="font-cormorant-garamond absolute font-light"
+          initial="initial"
+          variants={{
+            initial: {
+              left: "32px",
+              bottom: "20%",
+              fontSize: "90px",
+            },
+            closeIntro: {
+              left: "56px",
+              bottom: "3.5%",
+              fontSize: "30px",
+              transition: {
+                ease: [0.75, 0, 0.5, 0.995],
+                duration: 1,
+              },
+            },
+          }}
+          animate={introControls}
+        >
           CATS
-        </h3>
-        <h3 className="font-lato text-3xl absolute bottom-9 right-1/2 font-bold w-[100px] mx-auto">
-          ©{new Date().getFullYear()}
-        </h3>
+        </motion.h3>
       </main>
       <footer className="pb-8 px-12 flex justify-between">
         <div className="ml-[120px] flex gap-8">
