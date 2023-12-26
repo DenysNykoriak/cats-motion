@@ -10,6 +10,8 @@ import { CatBreed } from "@/models/cats";
 
 import Logo from "../components/Logo";
 
+import IntroImage from "./components/IntroImage";
+
 const SOCIALS = ["TW", "FB", "IG", "WECHAT"];
 const FOOTER_LINKS = ["Our website", "Our Collections"];
 
@@ -70,7 +72,7 @@ const HomeView = ({ breeds }: Props) => {
       </header>
       <main>
         {/* Intro Center Components */}
-        <div className="flex flex-col items-start mx-[25%] w-min h-[20vh] mt-[-150px]">
+        <div className="flex flex-col items-start mx-auto h-[40vh] w-[707px] mt-[-200px] relative">
           {/* Header Components (After Intro) */}
           <motion.h1
             className="relative font-lato font-bold tracking-wide"
@@ -79,12 +81,12 @@ const HomeView = ({ breeds }: Props) => {
               initial: {
                 left: "0vw",
                 top: "0%",
-                fontSize: "90px",
-                lineHeight: "85px",
+                fontSize: "140px",
+                lineHeight: "135px",
               },
               closeIntro: {
-                left: "3vw",
-                top: "-125%",
+                left: "2vw",
+                top: "-30%",
                 fontSize: "30px",
                 lineHeight: "30px",
                 transition: {
@@ -123,11 +125,11 @@ const HomeView = ({ breeds }: Props) => {
               initial: {
                 left: "0vw",
                 top: "0%",
-                fontSize: "90px",
+                fontSize: "140px",
               },
               closeIntro: {
-                left: "3vw",
-                top: "-125%",
+                left: "2vw",
+                top: "-30%",
                 fontSize: "30px",
                 transition: {
                   ease: [0.75, 0, 0.5, 0.995],
@@ -140,19 +142,49 @@ const HomeView = ({ breeds }: Props) => {
             - in Motion
           </motion.h1>
 
+          {/* Images */}
+          <>
+            <IntroImage
+              className="absolute left-[-180px] top-[16px] overflow-hidden"
+              animationControls={introControls}
+              imageSrc={breedsToShow[0].image.url}
+              imageAlt={breedsToShow[0].name}
+            />
+            <IntroImage
+              className="absolute left-[110px] top-[280px] overflow-hidden"
+              animationControls={introControls}
+              imageSrc={breedsToShow[1].image.url}
+              imageAlt={breedsToShow[1].name}
+            />
+            <IntroImage
+              className="absolute right-[70px] top-[380px] overflow-hidden"
+              animationControls={introControls}
+              imageSrc={breedsToShow[2].image.url}
+              imageAlt={breedsToShow[2].name}
+              isWide
+            />
+            <IntroImage
+              className="absolute right-[-220px] top-[16px] overflow-hidden"
+              animationControls={introControls}
+              imageSrc={breedsToShow[3].image.url}
+              imageAlt={breedsToShow[3].name}
+              isWide
+            />
+          </>
+
           {/* Footer Components (After Intro) */}
           <motion.h3
-            className="font-lato relative self-end leading-[85px] tracking-wide"
+            className="font-lato relative self-end leading-[95px] tracking-wide"
             initial="initial"
             variants={{
               initial: {
                 left: "0vw",
                 bottom: "0%",
-                fontSize: "90px",
+                fontSize: "100px",
               },
               closeIntro: {
-                left: "15vw",
-                bottom: "-245%",
+                left: "-20vw",
+                bottom: "-155%",
                 fontSize: "30px",
                 transition: {
                   ease: [0.75, 0, 0.5, 0.995],
