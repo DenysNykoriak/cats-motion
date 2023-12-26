@@ -33,7 +33,7 @@
       }
     ],
     "no-lonely-if": "error",
-    "no-mixed-operators": "error",
+    "no-mixed-operators": "off",
     "no-multi-assign": "error",
     "no-nested-ternary": "error",
     "no-plusplus": "error",
