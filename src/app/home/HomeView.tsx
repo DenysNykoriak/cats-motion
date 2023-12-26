@@ -1,11 +1,12 @@
 "use client";
 
 import classNames from "classnames";
-import { motion, useAnimationControls } from "framer-motion";
+import { motion, useAnimationControls, useTransform } from "framer-motion";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import Image from "next/image";
 
+import { useMouseMoveAnimation } from "@/hooks/useMouseMoveAnimation";
 import { CatBreed } from "@/models/cats";
 
 import Logo from "../components/Logo";
@@ -21,6 +22,31 @@ type Props = {
 
 const HomeView = ({ breeds }: Props) => {
   const [isIntro, setIsIntro] = useState(true);
+
+  const { mouseXSpring, mouseYSpring, handleMouseMove, handleMouseLeave } =
+    useMouseMoveAnimation();
+
+  const introImageRotateX = useTransform(
+    mouseYSpring,
+    [-0.5, 0.5],
+    ["17.5deg", "-17.5deg"],
+  );
+  const introImageRotateY = useTransform(
+    mouseXSpring,
+    [-0.5, 0.5],
+    ["-17.5deg", "17.5deg"],
+  );
+
+  const introTextRotateX = useTransform(
+    mouseYSpring,
+    [-0.5, 0.5],
+    ["10deg", "-10deg"],
+  );
+  const introTextRotateY = useTransform(
+    mouseXSpring,
+    [-0.5, 0.5],
+    ["-10deg", "10deg"],
+  );
 
   //Carousel
   const [catsCarouselWidth, setCatsCarouselWidth] = useState(0);
@@ -65,6 +91,8 @@ const HomeView = ({ breeds }: Props) => {
     <div
       className="min-h-screen flex flex-col justify-between relative"
       onClick={handleIntroClose}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
     >
       <header className="flex justify-between pt-14 px-12">
         <Logo />
@@ -96,6 +124,11 @@ const HomeView = ({ breeds }: Props) => {
               },
             }}
             animate={introControls}
+            style={{
+              rotateX: isIntro ? introTextRotateX : 0,
+              rotateY: isIntro ? introTextRotateY : 0,
+              transformStyle: isIntro ? "preserve-3d" : "flat",
+            }}
           >
             CATS
             <div className="overflow-hidden absolute -right-[calc(100%+8px)] top-0 flex items-start">
@@ -138,12 +171,24 @@ const HomeView = ({ breeds }: Props) => {
               },
             }}
             animate={introControls}
+            style={{
+              rotateX: isIntro ? introTextRotateX : 0,
+              rotateY: isIntro ? introTextRotateY : 0,
+              transformStyle: isIntro ? "preserve-3d" : "flat",
+            }}
           >
             - in Motion
           </motion.h1>
 
           {/* Images */}
-          <>
+          <motion.div
+            className="absolute top-0 left-0 right-0 bottom-0"
+            style={{
+              rotateX: introImageRotateX,
+              rotateY: introImageRotateY,
+              transformStyle: "preserve-3d",
+            }}
+          >
             <IntroImage
               className="absolute left-[-180px] top-[16px] overflow-hidden"
               animationControls={introControls}
@@ -170,7 +215,7 @@ const HomeView = ({ breeds }: Props) => {
               imageAlt={breedsToShow[3].name}
               isWide
             />
-          </>
+          </motion.div>
 
           {/* Footer Components (After Intro) */}
           <motion.h3
@@ -193,6 +238,11 @@ const HomeView = ({ breeds }: Props) => {
               },
             }}
             animate={introControls}
+            style={{
+              rotateX: isIntro ? introTextRotateX : 0,
+              rotateY: isIntro ? introTextRotateY : 0,
+              transformStyle: isIntro ? "preserve-3d" : "flat",
+            }}
           >
             ©{new Date().getFullYear()}
           </motion.h3>
@@ -277,6 +327,11 @@ const HomeView = ({ breeds }: Props) => {
             },
           }}
           animate={introControls}
+          style={{
+            rotateX: isIntro ? introTextRotateX : 0,
+            rotateY: isIntro ? introTextRotateY : 0,
+            transformStyle: isIntro ? "preserve-3d" : "flat",
+          }}
         >
           CATS
         </motion.h3>
