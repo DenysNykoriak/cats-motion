@@ -10,9 +10,10 @@
     "next/core-web-vitals",
     "plugin:import/recommended",
     "plugin:import/typescript",
+    "plugin:tailwindcss/recommended",
     "eslint-config-prettier"
   ],
-  "plugins": ["@typescript-eslint", "import", "prettier"],
+  "plugins": ["@typescript-eslint", "import", "tailwindcss", "prettier"],
   "rules": {
     //Common
     "comma-dangle": ["error", "only-multiline"],
