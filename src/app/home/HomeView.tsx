@@ -11,6 +11,7 @@ import { CatBreed } from "@/models/cats";
 
 import Logo from "../components/Logo";
 
+import CircularIntroText from "./components/CircularIntroText";
 import IntroImage from "./components/IntroImage";
 
 const SOCIALS = ["TW", "FB", "IG", "WECHAT"];
@@ -89,18 +90,18 @@ const HomeView = ({ breeds }: Props) => {
 
   return (
     <div
-      className="min-h-screen flex flex-col justify-between relative"
+      className="relative flex min-h-screen flex-col justify-between overflow-hidden"
       onClick={handleIntroClose}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      <header className="flex justify-between pt-14 px-12">
+      <header className="flex justify-between px-12 pt-14">
         <Logo />
         <span className="cursor-pointer">ABOUT</span>
       </header>
       <main>
         {/* Intro Center Components */}
-        <div className="flex flex-col items-start mx-auto h-[40vh] w-[707px] mt-[-200px] relative">
+        <div className="relative mx-auto mt-[-200px] flex h-[40vh] w-[707px] flex-col items-start">
           {/* Header Components (After Intro) */}
           <motion.h1
             className="relative font-lato font-bold tracking-wide"
@@ -137,9 +138,9 @@ const HomeView = ({ breeds }: Props) => {
             }
           >
             CATS
-            <div className="overflow-hidden absolute -right-[calc(100%+8px)] top-0 flex items-start">
+            <div className="absolute right-[calc(-100%-8px)] top-0 flex items-start overflow-hidden">
               <motion.sup
-                className="text-sm font-normal top-0 leading-4"
+                className="top-0 text-sm font-normal leading-4"
                 initial="initial"
                 variants={{
                   initial: { transform: "translateY(100%)" },
@@ -158,7 +159,7 @@ const HomeView = ({ breeds }: Props) => {
             </div>
           </motion.h1>
           <motion.h1
-            className="relative font-cormorant-garamond leading-none whitespace-nowrap tracking-wider"
+            className="relative whitespace-nowrap font-cormorant-garamond leading-none tracking-wider"
             initial="initial"
             variants={{
               initial: {
@@ -194,7 +195,7 @@ const HomeView = ({ breeds }: Props) => {
 
           {/* Images */}
           <motion.div
-            className="absolute top-0 left-0 right-0 bottom-0"
+            className="absolute inset-0"
             style={{
               rotateX: introImageRotateX,
               rotateY: introImageRotateY,
@@ -231,7 +232,7 @@ const HomeView = ({ breeds }: Props) => {
 
           {/* Footer Components (After Intro) */}
           <motion.h3
-            className="font-lato relative self-end leading-[95px] tracking-wide"
+            className="relative self-end font-lato leading-[95px] tracking-wide"
             initial="initial"
             variants={{
               initial: {
@@ -266,13 +267,31 @@ const HomeView = ({ breeds }: Props) => {
           </motion.h3>
         </div>
 
+        <motion.div
+          className="absolute right-[-45px] top-[38%] flex items-center justify-center overflow-hidden"
+          initial="initial"
+          variants={{
+            initial: { scale: 1 },
+            closeIntro: {
+              scale: 0,
+              transition: {
+                duration: 0.5,
+                ease: [0.75, 0, 0.5, 0.995],
+              },
+            },
+          }}
+          animate={introControls}
+        >
+          <CircularIntroText />
+        </motion.div>
+
         {/* Slides */}
         <div
-          className="absolute flex items-center justify-end h-2/3 top-[20%] overflow-hidden w-screen"
+          className="absolute top-[20%] flex h-2/3 w-screen items-center justify-end overflow-hidden"
           ref={carouselContainerRef}
         >
           <motion.div
-            className="overflow-hidden flex items-center"
+            className="flex items-center overflow-hidden"
             initial="initial"
             variants={{
               initial: { width: "0%", height: "0%" },
@@ -288,7 +307,7 @@ const HomeView = ({ breeds }: Props) => {
             animate={introControls}
           >
             <motion.div
-              className="flex gap-12 h-[66vh] px-12 items-center cursor-grab active:cursor-grabbing"
+              className="flex h-[66vh] cursor-grab items-center gap-12 px-12 active:cursor-grabbing"
               ref={carouselRef}
               drag="x"
               dragConstraints={{ right: 0, left: -catsCarouselWidth - 48 }}
@@ -326,7 +345,7 @@ const HomeView = ({ breeds }: Props) => {
 
         {/* Footer Components */}
         <motion.h3
-          className="font-cormorant-garamond absolute font-light"
+          className="absolute font-cormorant-garamond font-light"
           initial="initial"
           variants={{
             initial: {
@@ -360,7 +379,7 @@ const HomeView = ({ breeds }: Props) => {
           CATS
         </motion.h3>
       </main>
-      <footer className="pb-8 px-12 flex justify-between">
+      <footer className="flex justify-between px-12 pb-8">
         <div className="ml-[120px] flex gap-8">
           {SOCIALS.map((socialName) => (
             <span key={socialName} className="font-lato">
