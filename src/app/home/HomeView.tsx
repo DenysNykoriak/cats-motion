@@ -117,6 +117,8 @@ const HomeView = ({ breeds }: Props) => {
                 top: "-30%",
                 fontSize: "30px",
                 lineHeight: "30px",
+                rotateX: "0deg",
+                rotateY: "0deg",
                 transition: {
                   ease: [0.75, 0, 0.5, 0.995],
                   duration: 1,
@@ -124,11 +126,15 @@ const HomeView = ({ breeds }: Props) => {
               },
             }}
             animate={introControls}
-            style={{
-              rotateX: isIntro ? introTextRotateX : 0,
-              rotateY: isIntro ? introTextRotateY : 0,
-              transformStyle: isIntro ? "preserve-3d" : "flat",
-            }}
+            style={
+              isIntro
+                ? {
+                    rotateX: introTextRotateX,
+                    rotateY: introTextRotateY,
+                    transformStyle: "preserve-3d",
+                  }
+                : undefined
+            }
           >
             CATS
             <div className="overflow-hidden absolute -right-[calc(100%+8px)] top-0 flex items-start">
@@ -164,6 +170,8 @@ const HomeView = ({ breeds }: Props) => {
                 left: "2vw",
                 top: "-30%",
                 fontSize: "30px",
+                rotateX: "0deg",
+                rotateY: "0deg",
                 transition: {
                   ease: [0.75, 0, 0.5, 0.995],
                   duration: 1,
@@ -171,11 +179,15 @@ const HomeView = ({ breeds }: Props) => {
               },
             }}
             animate={introControls}
-            style={{
-              rotateX: isIntro ? introTextRotateX : 0,
-              rotateY: isIntro ? introTextRotateY : 0,
-              transformStyle: isIntro ? "preserve-3d" : "flat",
-            }}
+            style={
+              isIntro
+                ? {
+                    rotateX: introTextRotateX,
+                    rotateY: introTextRotateY,
+                    transformStyle: "preserve-3d",
+                  }
+                : undefined
+            }
           >
             - in Motion
           </motion.h1>
@@ -231,6 +243,8 @@ const HomeView = ({ breeds }: Props) => {
                 left: "-20vw",
                 bottom: "-155%",
                 fontSize: "30px",
+                rotateX: "0deg",
+                rotateY: "0deg",
                 transition: {
                   ease: [0.75, 0, 0.5, 0.995],
                   duration: 1,
@@ -238,11 +252,15 @@ const HomeView = ({ breeds }: Props) => {
               },
             }}
             animate={introControls}
-            style={{
-              rotateX: isIntro ? introTextRotateX : 0,
-              rotateY: isIntro ? introTextRotateY : 0,
-              transformStyle: isIntro ? "preserve-3d" : "flat",
-            }}
+            style={
+              isIntro
+                ? {
+                    rotateX: introTextRotateX,
+                    rotateY: introTextRotateY,
+                    transformStyle: "preserve-3d",
+                  }
+                : undefined
+            }
           >
             ©{new Date().getFullYear()}
           </motion.h3>
@@ -320,6 +338,8 @@ const HomeView = ({ breeds }: Props) => {
               left: "56px",
               bottom: "3.5%",
               fontSize: "30px",
+              rotateX: "0deg",
+              rotateY: "0deg",
               transition: {
                 ease: [0.75, 0, 0.5, 0.995],
                 duration: 1,
@@ -327,11 +347,15 @@ const HomeView = ({ breeds }: Props) => {
             },
           }}
           animate={introControls}
-          style={{
-            rotateX: isIntro ? introTextRotateX : 0,
-            rotateY: isIntro ? introTextRotateY : 0,
-            transformStyle: isIntro ? "preserve-3d" : "flat",
-          }}
+          style={
+            isIntro
+              ? {
+                  rotateX: introTextRotateX,
+                  rotateY: introTextRotateY,
+                  transformStyle: "preserve-3d",
+                }
+              : undefined
+          }
         >
           CATS
         </motion.h3>
