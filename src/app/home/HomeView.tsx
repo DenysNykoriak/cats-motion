@@ -1,18 +1,25 @@
 "use client";
 
 import classNames from "classnames";
-import { motion, useAnimationControls, useTransform } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  motionValue,
+  useAnimationControls,
+  useTransform,
+} from "framer-motion";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import Image from "next/image";
 
 import { useMouseMoveAnimation } from "@/hooks/useMouseMoveAnimation";
-import { CatBreed } from "@/models/cats";
+import { CatBreed, CatBreedWithImage } from "@/models/cats";
 
 import Logo from "../components/Logo";
 
 import CircularIntroText from "./components/CircularIntroText";
 import IntroImage from "./components/IntroImage";
+import HomeCatBreedView, { HomeCatBreedInfo } from "./HomeCatBreedView";
 
 const SOCIALS = ["TW", "FB", "IG", "WECHAT"];
 const FOOTER_LINKS = ["Our website", "Our Collections"];
@@ -39,27 +46,29 @@ const HomeView = ({ breeds }: Props) => {
   );
 
   const introTextRotateX = useTransform(
-    mouseYSpring,
+    isIntro ? mouseYSpring : motionValue(0),
     [-0.5, 0.5],
     ["10deg", "-10deg"],
   );
   const introTextRotateY = useTransform(
-    mouseXSpring,
+    isIntro ? mouseXSpring : motionValue(0),
     [-0.5, 0.5],
     ["-10deg", "10deg"],
   );
 
   //Carousel
+  const selectedBreedImageRef = useRef<HTMLDivElement | null>(null);
+  const [selectedBreedInfo, setSelectedBreedInfo] =
+    useState<HomeCatBreedInfo | null>(null);
+
   const [catsCarouselWidth, setCatsCarouselWidth] = useState(0);
 
+  const [isCarouselDragging, setIsCarouselDragging] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
   const carouselContainerRef = useRef<HTMLDivElement>(null);
 
   const breedsToShow = useMemo(
-    () =>
-      breeds.filter((breed) => !!breed.image) as (CatBreed & {
-        image: NonNullable<CatBreed["image"]>;
-      })[],
+    () => breeds.filter((breed) => !!breed.image) as CatBreedWithImage[],
     [breeds],
   );
 
@@ -72,15 +81,17 @@ const HomeView = ({ breeds }: Props) => {
     );
   }, [breeds]);
 
+  const handleSelectBreed = (breed: CatBreedWithImage, index: number) => {
+    if (isCarouselDragging) return;
+
+    setSelectedBreedInfo({ selectedBreed: breed, breedIndex: index });
+  };
+
   //---
   const introControls = useAnimationControls();
 
   const handleIntroClose = () => {
     if (!isIntro) {
-      // TODO: delete this after intro animations will be ready
-      setIsIntro(true);
-      introControls.start("initial");
-
       return;
     }
 
@@ -127,15 +138,11 @@ const HomeView = ({ breeds }: Props) => {
               },
             }}
             animate={introControls}
-            style={
-              isIntro
-                ? {
-                    rotateX: introTextRotateX,
-                    rotateY: introTextRotateY,
-                    transformStyle: "preserve-3d",
-                  }
-                : undefined
-            }
+            style={{
+              rotateX: introTextRotateX,
+              rotateY: introTextRotateY,
+              transformStyle: "preserve-3d",
+            }}
           >
             CATS
             <div className="absolute right-[calc(-100%-8px)] top-0 flex items-start overflow-hidden">
@@ -180,15 +187,11 @@ const HomeView = ({ breeds }: Props) => {
               },
             }}
             animate={introControls}
-            style={
-              isIntro
-                ? {
-                    rotateX: introTextRotateX,
-                    rotateY: introTextRotateY,
-                    transformStyle: "preserve-3d",
-                  }
-                : undefined
-            }
+            style={{
+              rotateX: introTextRotateX,
+              rotateY: introTextRotateY,
+              transformStyle: "preserve-3d",
+            }}
           >
             - in Motion
           </motion.h1>
@@ -253,15 +256,11 @@ const HomeView = ({ breeds }: Props) => {
               },
             }}
             animate={introControls}
-            style={
-              isIntro
-                ? {
-                    rotateX: introTextRotateX,
-                    rotateY: introTextRotateY,
-                    transformStyle: "preserve-3d",
-                  }
-                : undefined
-            }
+            style={{
+              rotateX: introTextRotateX,
+              rotateY: introTextRotateY,
+              transformStyle: "preserve-3d",
+            }}
           >
             ©{new Date().getFullYear()}
           </motion.h3>
@@ -322,6 +321,12 @@ const HomeView = ({ breeds }: Props) => {
                 },
               }}
               animate={introControls}
+              onDragStart={() => {
+                setIsCarouselDragging(true);
+              }}
+              onDragEnd={() => {
+                setIsCarouselDragging(false);
+              }}
             >
               {breedsToShow.map((breed, index) => (
                 <div
@@ -330,6 +335,10 @@ const HomeView = ({ breeds }: Props) => {
                     "min-w-[32vw] relative bg-primary",
                     index % 2 === 0 ? "h-full" : "h-[90%]",
                   )}
+                  onClick={(e) => {
+                    selectedBreedImageRef.current = e.currentTarget;
+                    handleSelectBreed(breed, index);
+                  }}
                 >
                   <Image
                     className="pointer-events-none object-cover"
@@ -366,15 +375,11 @@ const HomeView = ({ breeds }: Props) => {
             },
           }}
           animate={introControls}
-          style={
-            isIntro
-              ? {
-                  rotateX: introTextRotateX,
-                  rotateY: introTextRotateY,
-                  transformStyle: "preserve-3d",
-                }
-              : undefined
-          }
+          style={{
+            rotateX: introTextRotateX,
+            rotateY: introTextRotateY,
+            transformStyle: "preserve-3d",
+          }}
         >
           CATS
         </motion.h3>
@@ -402,6 +407,18 @@ const HomeView = ({ breeds }: Props) => {
           <span>©{new Date().getFullYear()} CatsMotion</span>
         </div>
       </footer>
+
+      <AnimatePresence>
+        {!!selectedBreedInfo && (
+          <HomeCatBreedView
+            {...selectedBreedInfo}
+            imageRef={selectedBreedImageRef}
+            onClose={() => {
+              setSelectedBreedInfo(null);
+            }}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };

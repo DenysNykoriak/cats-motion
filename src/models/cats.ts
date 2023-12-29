@@ -43,3 +43,7 @@ export interface CatBreed {
     url: string;
   };
 }
+
+export type CatBreedWithImage = CatBreed & {
+  image: NonNullable<CatBreed["image"]>;
+};
