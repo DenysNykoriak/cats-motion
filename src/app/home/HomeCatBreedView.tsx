@@ -4,6 +4,7 @@ import React, { Fragment, MutableRefObject, useEffect, useMemo } from "react";
 
 import Image from "next/image";
 
+import { useCatBreedImages } from "@/hooks/useCatBreedImages";
 import { CatBreedWithImage } from "@/models/cats";
 
 export type HomeCatBreedInfo = {
@@ -46,6 +47,12 @@ const HomeCatBreedView = ({
     [selectedBreed],
   );
 
+  //TODO: use this variables
+  const { isLoading: isImagesLoading, images: breedImages } = useCatBreedImages(
+    selectedBreed.id,
+  );
+
+  //Animations
   const animationImageControls = useAnimationControls();
 
   useEffect(() => {
@@ -60,6 +67,7 @@ const HomeCatBreedView = ({
       clearTimeout(animTimeout);
     };
   }, [animationImageControls]);
+  //----
 
   if (!imageRect) return null;
 
