@@ -7,6 +7,8 @@ import Image from "next/image";
 import { useCatBreedImages } from "@/hooks/useCatBreedImages";
 import { CatBreedWithImage } from "@/models/cats";
 
+import CircularBreedViewText from "./components/CircularBreedViewText";
+
 export type HomeCatBreedInfo = {
   selectedBreed: CatBreedWithImage;
   breedIndex: number;
@@ -134,6 +136,7 @@ const HomeCatBreedView = ({
       >
         <div className="flex h-screen w-screen justify-between gap-8 px-14 pt-[118px]">
           <div className="flex max-w-[40vw] flex-col justify-end">
+            {/* Breed Info */}
             <div className="mb-16">
               <div>
                 <h2 className="font-cormorant-garamond text-3xl">
@@ -150,27 +153,47 @@ const HomeCatBreedView = ({
               </div>
             </div>
           </div>
-          <motion.div
-            className="relative z-[10] mr-[10vw] h-[80vh] w-[45vw]"
-            initial={{
-              scale: 0.3,
-            }}
-            animate={{
-              scale: 1,
-              transition: {
-                type: "keyframes",
-                delay: 0.4,
-                duration: 1,
-              },
-            }}
-          >
-            <Image
-              className="object-contain"
-              src={selectedBreed.image.url}
-              alt={selectedBreed.name}
-              fill
-            />
-          </motion.div>
+
+          {/* Image */}
+          <div className="relative z-[10] mr-[10vw] h-[80vh] w-[45vw]">
+            <motion.div
+              className="h-[80vh] w-[45vw]"
+              initial={{
+                scale: 0.3,
+              }}
+              animate={{
+                scale: 1,
+                transition: {
+                  type: "keyframes",
+                  delay: 0.4,
+                  duration: 1,
+                },
+              }}
+            >
+              <Image
+                className="object-contain"
+                src={selectedBreed.image.url}
+                alt={selectedBreed.name}
+                fill
+              />
+            </motion.div>
+
+            {/* Circular Text */}
+            <motion.div
+              className="absolute bottom-[80px] right-[-100px] flex items-center justify-center overflow-hidden"
+              initial={{ scale: 0 }}
+              animate={{
+                scale: 1,
+                transition: {
+                  duration: 0.5,
+                  ease: [0.75, 0, 0.5, 0.995],
+                  delay: 0.8,
+                },
+              }}
+            >
+              <CircularBreedViewText />
+            </motion.div>
+          </div>
         </div>
       </motion.div>
 
