@@ -19,7 +19,7 @@ import Logo from "../components/Logo";
 
 import CircularIntroText from "./components/CircularIntroText";
 import IntroImage from "./components/IntroImage";
-import HomeCatBreedView, { HomeCatBreedInfo } from "./HomeCatBreedView";
+import HomeCatBreedModal, { HomeCatBreedInfo } from "./HomeCatBreedModal";
 
 const SOCIALS = ["TW", "FB", "IG", "WECHAT"];
 const FOOTER_LINKS = ["Our website", "Our Collections"];
@@ -410,7 +410,7 @@ const HomeView = ({ breeds }: Props) => {
 
       <AnimatePresence>
         {!!selectedBreedInfo && (
-          <HomeCatBreedView
+          <HomeCatBreedModal
             {...selectedBreedInfo}
             imageRef={selectedBreedImageRef}
             onClose={() => {

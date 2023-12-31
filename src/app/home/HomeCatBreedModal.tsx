@@ -1,11 +1,20 @@
 import classNames from "classnames";
 import { motion, useAnimationControls } from "framer-motion";
-import React, { Fragment, MutableRefObject, useEffect, useMemo } from "react";
+import React, {
+  Fragment,
+  MutableRefObject,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import Image from "next/image";
 
 import { useCatBreedImages } from "@/hooks/useCatBreedImages";
 import { CatBreedWithImage } from "@/models/cats";
+
+import CloseButton from "../components/CloseButton";
+import CloseIcon from "../components/icons/CloseIcon";
 
 import CircularBreedViewText from "./components/CircularBreedViewText";
 
@@ -19,7 +28,7 @@ type Props = HomeCatBreedInfo & {
   imageRef: MutableRefObject<HTMLDivElement | null>;
 };
 
-const HomeCatBreedView = ({
+const HomeCatBreedModal = ({
   selectedBreed,
   breedIndex,
   imageRef,
@@ -50,9 +59,18 @@ const HomeCatBreedView = ({
   );
 
   //TODO: use this variables
-  const { isLoading: isImagesLoading, images: breedImages } = useCatBreedImages(
-    selectedBreed.id,
+  const { isLoading: isImagesLoading, images: additionalBreedImages } =
+    useCatBreedImages(selectedBreed.id);
+
+  const allBreedImages = useMemo(
+    () =>
+      [selectedBreed.image, ...additionalBreedImages].filter(
+        (image, index) => index === 0 || image.id !== selectedBreed.image.id,
+      ),
+    [selectedBreed.image, additionalBreedImages],
   );
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const activeImage = allBreedImages[activeImageIndex];
 
   //Animations
   const animationImageControls = useAnimationControls();
@@ -109,8 +127,6 @@ const HomeCatBreedView = ({
             "bg-bgV3": breedIndex % 3 === 2,
           },
         )}
-        // TODO: delete after exit button will be added
-        onClick={onClose}
         initial={{
           top: "100%",
           bottom: "0%",
@@ -134,23 +150,23 @@ const HomeCatBreedView = ({
           },
         }}
       >
-        <div className="flex h-screen w-screen justify-between gap-8 px-14 pt-[118px]">
-          <div className="flex max-w-[40vw] flex-col justify-end">
-            {/* Breed Info */}
-            <div className="mb-16">
-              <div>
-                <h2 className="font-cormorant-garamond text-3xl">
-                  CATS / <span className="text-lg">{selectedBreed.name}</span>
-                </h2>
-                <div className="mt-3 grid grid-cols-catBreedInfo gap-4">
-                  {breedInfo.map((info) => (
-                    <Fragment key={info.title}>
-                      <h3 className=" font-normal">{info.title}</h3>
-                      <h3>{info.value}</h3>
-                    </Fragment>
-                  ))}
-                </div>
-              </div>
+        <div className="relative flex h-screen w-screen justify-between gap-8 px-14 pt-[118px]">
+          <div className="absolute right-10 top-[56px]">
+            <CloseButton onClose={onClose} />
+          </div>
+
+          {/* Breed Info */}
+          <div className="mb-16 flex max-w-[40vw] flex-col justify-end">
+            <h2 className="font-cormorant-garamond text-3xl">
+              CATS / <span className="text-lg">{selectedBreed.name}</span>
+            </h2>
+            <div className="mt-3 grid grid-cols-catBreedInfo gap-4">
+              {breedInfo.map((info) => (
+                <Fragment key={info.title}>
+                  <h3 className=" font-normal">{info.title}</h3>
+                  <h3>{info.value}</h3>
+                </Fragment>
+              ))}
             </div>
           </div>
 
@@ -172,7 +188,7 @@ const HomeCatBreedView = ({
             >
               <Image
                 className="object-contain"
-                src={selectedBreed.image.url}
+                src={activeImage.url}
                 alt={selectedBreed.name}
                 fill
               />
@@ -194,6 +210,28 @@ const HomeCatBreedView = ({
               <CircularBreedViewText />
             </motion.div>
           </div>
+
+          {/* Arrows */}
+          <>
+            <button
+              className="absolute left-8 top-[45vh] font-cormorant-garamond text-3xl disabled:text-secondary"
+              disabled={activeImageIndex <= 0}
+              onClick={() => {
+                setActiveImageIndex((prev) => prev - 1);
+              }}
+            >
+              ←
+            </button>
+            <button
+              className="absolute right-8 top-[45vh] font-cormorant-garamond text-3xl disabled:text-secondary"
+              disabled={activeImageIndex >= allBreedImages.length - 1}
+              onClick={() => {
+                setActiveImageIndex((prev) => prev + 1);
+              }}
+            >
+              →
+            </button>
+          </>
         </div>
       </motion.div>
 
@@ -360,4 +398,4 @@ const HomeCatBreedView = ({
   );
 };
 
-export default HomeCatBreedView;
+export default HomeCatBreedModal;

@@ -5,6 +5,7 @@ const config: Config = {
   theme: {
     colors: {
       primary: "#fdfbfd",
+      secondary: "#b0afb0",
       bgPrimary: "#181618",
       bgV1: "#adaa9f",
       bgV2: "#9d9f97",
