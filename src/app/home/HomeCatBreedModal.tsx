@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { motion, useAnimationControls } from "framer-motion";
+import { Variants, motion, useAnimationControls } from "framer-motion";
 import React, {
   Fragment,
   MutableRefObject,
@@ -10,11 +10,11 @@ import React, {
 
 import Image from "next/image";
 
+import { defaultTransitionEase } from "@/config/animations";
 import { useCatBreedImages } from "@/hooks/useCatBreedImages";
 import { CatBreedWithImage } from "@/models/cats";
 
 import CloseButton from "../components/CloseButton";
-import CloseIcon from "../components/icons/CloseIcon";
 
 import CircularBreedViewText from "./components/CircularBreedViewText";
 
@@ -58,9 +58,7 @@ const HomeCatBreedModal = ({
     [selectedBreed],
   );
 
-  //TODO: use this variables
-  const { isLoading: isImagesLoading, images: additionalBreedImages } =
-    useCatBreedImages(selectedBreed.id);
+  const { images: additionalBreedImages } = useCatBreedImages(selectedBreed.id);
 
   const allBreedImages = useMemo(
     () =>
@@ -80,13 +78,46 @@ const HomeCatBreedModal = ({
 
     const animTimeout = setTimeout(() => {
       animationImageControls.start({ scale: 0, transition: { duration: 10 } });
-      animationImageControls.start("exit");
+      animationImageControls.start("hide");
     }, 400);
 
     return () => {
       clearTimeout(animTimeout);
     };
   }, [animationImageControls]);
+
+  const animationImageVariants: Variants = {
+    initial: {
+      opacity: 0,
+    },
+    enter: (custom) => ({
+      opacity: 1,
+      transition: {
+        type: "just",
+        delay: 0.1 + 0.1 * custom,
+      },
+    }),
+    hide: (custom) => ({
+      display: "none",
+      transition: {
+        type: "just",
+        delay: 0.1 + 0.1 * custom,
+      },
+    }),
+    exit: (custom) => ({
+      display: "block",
+      width: imageRect?.width,
+      height: imageRect?.height,
+      top: imageRect?.top,
+      left: imageRect?.left,
+      scale: [0, 1],
+      transition: {
+        ease: defaultTransitionEase,
+        duration: 1,
+        delay: 0.1 * (custom - 1),
+      },
+    }),
+  };
   //----
 
   if (!imageRect) return null;
@@ -104,7 +135,7 @@ const HomeCatBreedModal = ({
           bottom: "0%",
           transition: {
             duration: 0.8,
-            ease: [0.75, 0, 0.5, 0.995],
+            ease: defaultTransitionEase,
           },
         }}
         exit={{
@@ -112,7 +143,7 @@ const HomeCatBreedModal = ({
           transition: {
             duration: 0.8,
             delay: 0.2,
-            ease: [0.75, 0, 0.5, 0.995],
+            ease: defaultTransitionEase,
           },
         }}
       />
@@ -138,7 +169,7 @@ const HomeCatBreedModal = ({
           transition: {
             duration: 0.8,
             delay: 0.2,
-            ease: [0.75, 0, 0.5, 0.995],
+            ease: defaultTransitionEase,
           },
         }}
         exit={{
@@ -146,7 +177,7 @@ const HomeCatBreedModal = ({
           alignItems: "flex-start",
           transition: {
             duration: 0.8,
-            ease: [0.75, 0, 0.5, 0.995],
+            ease: defaultTransitionEase,
           },
         }}
       >
@@ -157,14 +188,57 @@ const HomeCatBreedModal = ({
 
           {/* Breed Info */}
           <div className="mb-16 flex max-w-[40vw] flex-col justify-end">
-            <h2 className="font-cormorant-garamond text-3xl">
-              CATS / <span className="text-lg">{selectedBreed.name}</span>
-            </h2>
-            <div className="mt-3 grid grid-cols-catBreedInfo gap-4">
+            <div className="overflow-hidden pb-1">
+              <motion.h2
+                className="font-cormorant-garamond text-3xl"
+                initial={{ y: "150%" }}
+                animate={{
+                  y: "0%",
+                  transition: {
+                    ease: defaultTransitionEase,
+                    duration: 1,
+                    delay: 0.3,
+                  },
+                }}
+              >
+                CATS / <span className="text-lg">{selectedBreed.name}</span>
+              </motion.h2>
+            </div>
+            <div className="mt-2 grid grid-cols-catBreedInfo gap-x-4 gap-y-2">
               {breedInfo.map((info) => (
                 <Fragment key={info.title}>
-                  <h3 className=" font-normal">{info.title}</h3>
-                  <h3>{info.value}</h3>
+                  <div className="overflow-hidden pb-2">
+                    <motion.h3
+                      className="font-normal"
+                      initial={{ y: "150%" }}
+                      animate={{
+                        y: "0%",
+                        transition: {
+                          ease: defaultTransitionEase,
+                          duration: 1,
+                          delay: 0.3,
+                        },
+                      }}
+                    >
+                      {info.title}
+                    </motion.h3>
+                  </div>
+
+                  <div className="overflow-hidden pb-2">
+                    <motion.h3
+                      initial={{ y: "150%" }}
+                      animate={{
+                        y: "0%",
+                        transition: {
+                          ease: defaultTransitionEase,
+                          duration: 1,
+                          delay: 0.3,
+                        },
+                      }}
+                    >
+                      {info.value}
+                    </motion.h3>
+                  </div>
                 </Fragment>
               ))}
             </div>
@@ -185,6 +259,13 @@ const HomeCatBreedModal = ({
                   duration: 1,
                 },
               }}
+              exit={{
+                scale: 0.5,
+                transition: {
+                  type: "keyframes",
+                  duration: 1,
+                },
+              }}
             >
               <Image
                 className="object-contain"
@@ -202,7 +283,7 @@ const HomeCatBreedModal = ({
                 scale: 1,
                 transition: {
                   duration: 0.5,
-                  ease: [0.75, 0, 0.5, 0.995],
+                  ease: defaultTransitionEase,
                   delay: 0.8,
                 },
               }}
@@ -246,27 +327,10 @@ const HomeCatBreedModal = ({
             left: imageRect.left,
           }}
           initial="initial"
+          exit="exit"
           animate={animationImageControls}
           custom={1}
-          variants={{
-            initial: {
-              opacity: 0,
-            },
-            enter: (custom) => ({
-              opacity: 1,
-              transition: {
-                type: "just",
-                delay: 0.1 + 0.1 * custom,
-              },
-            }),
-            exit: (custom) => ({
-              display: "none",
-              transition: {
-                type: "just",
-                delay: 0.1 + 0.1 * custom,
-              },
-            }),
-          }}
+          variants={animationImageVariants}
         >
           <Image
             rel="preload"
@@ -285,27 +349,10 @@ const HomeCatBreedModal = ({
             left: imageRect.left + imageRect.width * 0.07,
           }}
           initial="initial"
+          exit="exit"
           animate={animationImageControls}
           custom={2}
-          variants={{
-            initial: {
-              opacity: 0,
-            },
-            enter: (custom) => ({
-              opacity: 1,
-              transition: {
-                type: "just",
-                delay: 0.1 + 0.1 * custom,
-              },
-            }),
-            exit: (custom) => ({
-              display: "none",
-              transition: {
-                type: "just",
-                delay: 0.1 + 0.1 * custom,
-              },
-            }),
-          }}
+          variants={animationImageVariants}
         >
           <Image
             rel="preload"
@@ -324,27 +371,10 @@ const HomeCatBreedModal = ({
             left: imageRect.left + imageRect.width * 0.25,
           }}
           initial="initial"
+          exit="exit"
           animate={animationImageControls}
           custom={3}
-          variants={{
-            initial: {
-              opacity: 0,
-            },
-            enter: (custom) => ({
-              opacity: 1,
-              transition: {
-                type: "just",
-                delay: 0.1 + 0.1 * custom,
-              },
-            }),
-            exit: (custom) => ({
-              display: "none",
-              transition: {
-                type: "just",
-                delay: 0.1 + 0.1 * custom,
-              },
-            }),
-          }}
+          variants={animationImageVariants}
         >
           <Image
             rel="preload"
@@ -363,27 +393,10 @@ const HomeCatBreedModal = ({
             left: imageRect.left + imageRect.width * 0.4,
           }}
           initial="initial"
+          exit="exit"
           animate={animationImageControls}
           custom={4}
-          variants={{
-            initial: {
-              opacity: 0,
-            },
-            enter: (custom) => ({
-              opacity: 1,
-              transition: {
-                type: "just",
-                delay: 0.1 + 0.1 * custom,
-              },
-            }),
-            exit: (custom) => ({
-              display: "none",
-              transition: {
-                type: "just",
-                delay: 0.1 + 0.1 * custom,
-              },
-            }),
-          }}
+          variants={animationImageVariants}
         >
           <Image
             rel="preload"

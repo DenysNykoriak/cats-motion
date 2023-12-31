@@ -12,6 +12,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import Image from "next/image";
 
+import { defaultTransitionEase } from "@/config/animations";
 import { useMouseMoveAnimation } from "@/hooks/useMouseMoveAnimation";
 import { CatBreed, CatBreedWithImage } from "@/models/cats";
 
@@ -132,7 +133,7 @@ const HomeView = ({ breeds }: Props) => {
                 rotateX: "0deg",
                 rotateY: "0deg",
                 transition: {
-                  ease: [0.75, 0, 0.5, 0.995],
+                  ease: defaultTransitionEase,
                   duration: 1,
                 },
               },
@@ -181,7 +182,7 @@ const HomeView = ({ breeds }: Props) => {
                 rotateX: "0deg",
                 rotateY: "0deg",
                 transition: {
-                  ease: [0.75, 0, 0.5, 0.995],
+                  ease: defaultTransitionEase,
                   duration: 1,
                 },
               },
@@ -250,7 +251,7 @@ const HomeView = ({ breeds }: Props) => {
                 rotateX: "0deg",
                 rotateY: "0deg",
                 transition: {
-                  ease: [0.75, 0, 0.5, 0.995],
+                  ease: defaultTransitionEase,
                   duration: 1,
                 },
               },
@@ -275,7 +276,7 @@ const HomeView = ({ breeds }: Props) => {
               scale: 0,
               transition: {
                 duration: 0.5,
-                ease: [0.75, 0, 0.5, 0.995],
+                ease: defaultTransitionEase,
               },
             },
           }}
@@ -369,7 +370,7 @@ const HomeView = ({ breeds }: Props) => {
               rotateX: "0deg",
               rotateY: "0deg",
               transition: {
-                ease: [0.75, 0, 0.5, 0.995],
+                ease: defaultTransitionEase,
                 duration: 1,
               },
             },

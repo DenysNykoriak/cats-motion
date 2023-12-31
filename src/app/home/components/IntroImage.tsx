@@ -4,6 +4,8 @@ import React from "react";
 
 import Image from "next/image";
 
+import { defaultTransitionEase } from "@/config/animations";
+
 type Props = {
   imageSrc: string;
   imageAlt: string;
@@ -33,7 +35,7 @@ const IntroImage = ({
         closeIntro: {
           y: "100%",
           transition: {
-            ease: [0.75, 0, 0.5, 0.995],
+            ease: defaultTransitionEase,
             duration: 1,
           },
         },
