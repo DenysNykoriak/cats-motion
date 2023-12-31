@@ -16,10 +16,9 @@ const config: Config = {
       "cormorant-garamond": ["var(--font-cormorant-garamond)"],
     },
     zIndex: {
-      firstModalView: "1",
-      secondModalView: "2",
-      modalImage: "3",
+      tempModalView: "11",
       logo: "100",
+      controls: "100",
     },
     gridTemplateColumns: {
       catBreedInfo: "min-content 1fr",

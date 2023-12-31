@@ -19,8 +19,10 @@ import { CatBreed, CatBreedWithImage } from "@/models/cats";
 import Logo from "../components/Logo";
 
 import CircularIntroText from "./components/CircularIntroText";
+import HomeCatBreedModal, {
+  HomeCatBreedInfo,
+} from "./components/HomeCatBreedModal";
 import IntroImage from "./components/IntroImage";
-import HomeCatBreedModal, { HomeCatBreedInfo } from "./HomeCatBreedModal";
 
 const SOCIALS = ["TW", "FB", "IG", "WECHAT"];
 const FOOTER_LINKS = ["Our website", "Our Collections"];

@@ -14,9 +14,9 @@ import { defaultTransitionEase } from "@/config/animations";
 import { useCatBreedImages } from "@/hooks/useCatBreedImages";
 import { CatBreedWithImage } from "@/models/cats";
 
-import CloseButton from "../components/CloseButton";
+import CloseButton from "../../components/CloseButton";
 
-import CircularBreedViewText from "./components/CircularBreedViewText";
+import HomeCatBreedContent from "./HomeCatBreedContent";
 
 export type HomeCatBreedInfo = {
   selectedBreed: CatBreedWithImage;
@@ -39,25 +39,6 @@ const HomeCatBreedModal = ({
     [imageRef],
   );
 
-  const breedInfo = useMemo(
-    () => [
-      {
-        title: "DESCRIPTION",
-        value: selectedBreed.description,
-      },
-      { title: "TEMPERAMENT", value: selectedBreed.temperament },
-      {
-        title: "LIFE SPAN",
-        value: `${selectedBreed.life_span} years`,
-      },
-      {
-        title: "WEIGHT",
-        value: `${selectedBreed.weight.metric} kg / ${selectedBreed.weight.imperial} lb`,
-      },
-    ],
-    [selectedBreed],
-  );
-
   const { images: additionalBreedImages } = useCatBreedImages(selectedBreed.id);
 
   const allBreedImages = useMemo(
@@ -67,10 +48,33 @@ const HomeCatBreedModal = ({
       ),
     [selectedBreed.image, additionalBreedImages],
   );
+
+  const [tempImage, setTempImage] = useState<CatBreedWithImage["image"] | null>(
+    null,
+  );
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const activeImage = allBreedImages[activeImageIndex];
 
-  //Animations
+  const imagePageControls = useAnimationControls();
+
+  const handleNextImage = () => {
+    setTempImage(allBreedImages[activeImageIndex + 1]);
+    imagePageControls.start("nextPage");
+
+    setTimeout(() => {
+      setActiveImageIndex((prev) => prev + 1);
+      // setTempImage(null);
+    }, 1000);
+  };
+
+  const handlePrevImage = () => {
+    setTempImage(allBreedImages[activeImageIndex + 1]);
+
+    setTimeout(() => {
+      // setActiveImageIndex((prev) => prev - 1);
+    }, 1000);
+  };
+
   const animationImageControls = useAnimationControls();
 
   useEffect(() => {
@@ -84,7 +88,8 @@ const HomeCatBreedModal = ({
     return () => {
       clearTimeout(animTimeout);
     };
-  }, [animationImageControls]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const animationImageVariants: Variants = {
     initial: {
@@ -118,14 +123,13 @@ const HomeCatBreedModal = ({
       },
     }),
   };
-  //----
 
   if (!imageRect) return null;
 
   return (
     <div className="absolute inset-0">
       <motion.div
-        className="absolute inset-x-0 z-firstModalView bg-primary"
+        className="absolute inset-x-0 bg-primary"
         initial={{
           top: "100%",
           bottom: "0%",
@@ -150,14 +154,11 @@ const HomeCatBreedModal = ({
 
       {/* Content */}
       <motion.div
-        className={classNames(
-          "absolute inset-x-0 z-secondModalView overflow-hidden flex",
-          {
-            "bg-bgV1": breedIndex % 3 === 0,
-            "bg-bgV2": breedIndex % 3 === 1,
-            "bg-bgV3": breedIndex % 3 === 2,
-          },
-        )}
+        className={classNames("absolute inset-x-0 overflow-hidden flex", {
+          "bg-bgV1": breedIndex % 3 === 0,
+          "bg-bgV2": breedIndex % 3 === 1,
+          "bg-bgV3": breedIndex % 3 === 2,
+        })}
         initial={{
           top: "100%",
           bottom: "0%",
@@ -181,139 +182,33 @@ const HomeCatBreedModal = ({
           },
         }}
       >
-        <div className="relative flex h-screen w-screen justify-between gap-8 px-14 pt-[118px]">
-          <div className="absolute right-10 top-[56px]">
+        <HomeCatBreedContent
+          breed={selectedBreed}
+          image={activeImage}
+          imageIndex={breedIndex}
+        >
+          <div className="absolute right-10 top-[56px] z-controls">
             <CloseButton onClose={onClose} />
-          </div>
-
-          {/* Breed Info */}
-          <div className="mb-16 flex max-w-[40vw] flex-col justify-end">
-            <div className="overflow-hidden pb-1">
-              <motion.h2
-                className="font-cormorant-garamond text-3xl"
-                initial={{ y: "150%" }}
-                animate={{
-                  y: "0%",
-                  transition: {
-                    ease: defaultTransitionEase,
-                    duration: 1,
-                    delay: 0.3,
-                  },
-                }}
-              >
-                CATS / <span className="text-lg">{selectedBreed.name}</span>
-              </motion.h2>
-            </div>
-            <div className="mt-2 grid grid-cols-catBreedInfo gap-x-4 gap-y-2">
-              {breedInfo.map((info) => (
-                <Fragment key={info.title}>
-                  <div className="overflow-hidden pb-2">
-                    <motion.h3
-                      className="font-normal"
-                      initial={{ y: "150%" }}
-                      animate={{
-                        y: "0%",
-                        transition: {
-                          ease: defaultTransitionEase,
-                          duration: 1,
-                          delay: 0.3,
-                        },
-                      }}
-                    >
-                      {info.title}
-                    </motion.h3>
-                  </div>
-
-                  <div className="overflow-hidden pb-2">
-                    <motion.h3
-                      initial={{ y: "150%" }}
-                      animate={{
-                        y: "0%",
-                        transition: {
-                          ease: defaultTransitionEase,
-                          duration: 1,
-                          delay: 0.3,
-                        },
-                      }}
-                    >
-                      {info.value}
-                    </motion.h3>
-                  </div>
-                </Fragment>
-              ))}
-            </div>
-          </div>
-
-          {/* Image */}
-          <div className="relative z-[10] mr-[10vw] h-[80vh] w-[45vw]">
-            <motion.div
-              className="h-[80vh] w-[45vw]"
-              initial={{
-                scale: 0.3,
-              }}
-              animate={{
-                scale: 1,
-                transition: {
-                  type: "keyframes",
-                  delay: 0.4,
-                  duration: 1,
-                },
-              }}
-              exit={{
-                scale: 0.5,
-                transition: {
-                  type: "keyframes",
-                  duration: 1,
-                },
-              }}
-            >
-              <Image
-                className="object-contain"
-                src={activeImage.url}
-                alt={selectedBreed.name}
-                fill
-              />
-            </motion.div>
-
-            {/* Circular Text */}
-            <motion.div
-              className="absolute bottom-[80px] right-[-100px] flex items-center justify-center overflow-hidden"
-              initial={{ scale: 0 }}
-              animate={{
-                scale: 1,
-                transition: {
-                  duration: 0.5,
-                  ease: defaultTransitionEase,
-                  delay: 0.8,
-                },
-              }}
-            >
-              <CircularBreedViewText />
-            </motion.div>
           </div>
 
           {/* Arrows */}
           <>
             <button
-              className="absolute left-8 top-[45vh] font-cormorant-garamond text-3xl disabled:text-secondary"
+              className="absolute left-8 top-[45vh] z-controls font-cormorant-garamond text-3xl disabled:text-secondary"
               disabled={activeImageIndex <= 0}
-              onClick={() => {
-                setActiveImageIndex((prev) => prev - 1);
-              }}
+              onClick={handlePrevImage}
             >
               ←
             </button>
             <button
-              className="absolute right-8 top-[45vh] font-cormorant-garamond text-3xl disabled:text-secondary"
+              className="absolute right-8 top-[45vh] z-controls font-cormorant-garamond text-3xl disabled:text-secondary"
               disabled={activeImageIndex >= allBreedImages.length - 1}
-              onClick={() => {
-                setActiveImageIndex((prev) => prev + 1);
-              }}
+              onClick={handleNextImage}
             >
               →
             </button>
           </>
-        </div>
+        </HomeCatBreedContent>
       </motion.div>
 
       {/* Animation Images */}
@@ -407,6 +302,33 @@ const HomeCatBreedModal = ({
           />
         </motion.div>
       </>
+
+      {/* Image Change */}
+      {tempImage && (
+        <motion.div
+          className="absolute inset-y-0 z-tempModalView flex flex-col overflow-hidden"
+          variants={{
+            nextPage: {
+              right: "0%",
+              left: ["100%", "0%"],
+              alignItems: "end",
+              transition: {
+                duration: 0.9,
+                ease: defaultTransitionEase,
+                delay: 0.1,
+              },
+            },
+          }}
+          animate={imagePageControls}
+        >
+          <HomeCatBreedContent
+            breed={selectedBreed}
+            image={tempImage}
+            imageIndex={breedIndex + activeImageIndex + 1}
+            disableEnterAnimation
+          />
+        </motion.div>
+      )}
     </div>
   );
 };
