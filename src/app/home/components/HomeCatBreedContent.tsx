@@ -149,9 +149,9 @@ const HomeCatBreedContent = ({
       </div>
 
       {/* Image */}
-      <div className="relative z-[10] mr-[10vw] h-[80vh] w-[45vw]">
+      <div className="relative mr-[10vw] h-[80vh] w-[45vw]">
         <motion.div
-          className="flex h-[80vh] w-[45vw] flex-col justify-center"
+          className="z-[10] flex h-[80vh] w-[45vw] flex-col justify-center"
           initial="initial"
           animate="animate"
           exit="exit"
@@ -168,14 +168,16 @@ const HomeCatBreedContent = ({
         </motion.div>
 
         {/* Circular Text */}
-        <motion.div
-          className="absolute bottom-[80px] right-[-100px] flex items-center justify-center overflow-hidden"
-          initial="initial"
-          animate="animate"
-          variants={!disableEnterAnimation ? circularTextVariants : undefined}
-        >
-          <CircularBreedViewText />
-        </motion.div>
+        {!disableEnterAnimation && (
+          <motion.div
+            className="absolute bottom-[80px] right-[-100px] z-controls flex items-center justify-center overflow-hidden"
+            initial="initial"
+            animate="animate"
+            variants={!disableEnterAnimation ? circularTextVariants : undefined}
+          >
+            <CircularBreedViewText />
+          </motion.div>
+        )}
       </div>
     </div>
   );
