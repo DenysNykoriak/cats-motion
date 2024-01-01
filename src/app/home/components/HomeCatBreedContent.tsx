@@ -151,16 +151,18 @@ const HomeCatBreedContent = ({
       {/* Image */}
       <div className="relative z-[10] mr-[10vw] h-[80vh] w-[45vw]">
         <motion.div
-          className="h-[80vh] w-[45vw]"
+          className="flex h-[80vh] w-[45vw] flex-col justify-center"
           initial="initial"
           animate="animate"
           exit="exit"
           variants={!disableEnterAnimation ? breedImageVariants : undefined}
         >
           <Image
+            key={image.url}
             className="object-contain"
             src={image.url}
             alt={breed.name}
+            loading="eager"
             fill
           />
         </motion.div>

@@ -1,4 +1,3 @@
-import classNames from "classnames";
 import { Variants, motion, useAnimationControls } from "framer-motion";
 import React, {
   Fragment,
@@ -49,29 +48,39 @@ const HomeCatBreedModal = ({
     [selectedBreed.image, additionalBreedImages],
   );
 
-  const [tempImage, setTempImage] = useState<CatBreedWithImage["image"] | null>(
-    null,
-  );
+  const [imageAnimationPage, setImageAnimationPage] = useState<{
+    image: CatBreedWithImage["image"];
+    animationName: "nextPage" | "prevPage";
+  } | null>(null);
+
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const activeImage = allBreedImages[activeImageIndex];
 
-  const imagePageControls = useAnimationControls();
-
   const handleNextImage = () => {
-    setTempImage(allBreedImages[activeImageIndex + 1]);
-    imagePageControls.start("nextPage");
+    if (imageAnimationPage) return;
+
+    setImageAnimationPage({
+      image: allBreedImages[activeImageIndex + 1],
+      animationName: "nextPage",
+    });
 
     setTimeout(() => {
       setActiveImageIndex((prev) => prev + 1);
-      // setTempImage(null);
+      setImageAnimationPage(null);
     }, 1000);
   };
 
   const handlePrevImage = () => {
-    setTempImage(allBreedImages[activeImageIndex + 1]);
+    if (imageAnimationPage) return;
+
+    setImageAnimationPage({
+      image: allBreedImages[activeImageIndex - 1],
+      animationName: "prevPage",
+    });
 
     setTimeout(() => {
-      // setActiveImageIndex((prev) => prev - 1);
+      setActiveImageIndex((prev) => prev - 1);
+      setImageAnimationPage(null);
     }, 1000);
   };
 
@@ -154,11 +163,7 @@ const HomeCatBreedModal = ({
 
       {/* Content */}
       <motion.div
-        className={classNames("absolute inset-x-0 overflow-hidden flex", {
-          "bg-bgV1": breedIndex % 3 === 0,
-          "bg-bgV2": breedIndex % 3 === 1,
-          "bg-bgV3": breedIndex % 3 === 2,
-        })}
+        className="absolute inset-x-0 flex overflow-hidden"
         initial={{
           top: "100%",
           bottom: "0%",
@@ -185,7 +190,7 @@ const HomeCatBreedModal = ({
         <HomeCatBreedContent
           breed={selectedBreed}
           image={activeImage}
-          imageIndex={breedIndex}
+          imageIndex={breedIndex + activeImageIndex}
         >
           <div className="absolute right-10 top-[56px] z-controls">
             <CloseButton onClose={onClose} />
@@ -304,11 +309,12 @@ const HomeCatBreedModal = ({
       </>
 
       {/* Image Change */}
-      {tempImage && (
+      {imageAnimationPage && (
         <motion.div
-          className="absolute inset-y-0 z-tempModalView flex flex-col overflow-hidden"
+          className="absolute inset-y-0 z-tempModalView hidden flex-col overflow-hidden"
           variants={{
             nextPage: {
+              display: "flex",
               right: "0%",
               left: ["100%", "0%"],
               alignItems: "end",
@@ -318,13 +324,28 @@ const HomeCatBreedModal = ({
                 delay: 0.1,
               },
             },
+            prevPage: {
+              display: "flex",
+              left: "0%",
+              right: ["100%", "0%"],
+              alignItems: "start",
+              transition: {
+                duration: 0.9,
+                ease: defaultTransitionEase,
+                delay: 0.1,
+              },
+            },
           }}
-          animate={imagePageControls}
+          animate={imageAnimationPage.animationName}
         >
           <HomeCatBreedContent
             breed={selectedBreed}
-            image={tempImage}
-            imageIndex={breedIndex + activeImageIndex + 1}
+            image={imageAnimationPage.image}
+            imageIndex={
+              breedIndex +
+              activeImageIndex +
+              (imageAnimationPage.animationName === "nextPage" ? 1 : -1)
+            }
             disableEnterAnimation
           />
         </motion.div>
