@@ -4,11 +4,10 @@ import React, { Fragment, ReactNode, useMemo } from "react";
 
 import Image from "next/image";
 
+import CircularText from "@/app/components/CircularText";
 import { CustomCursorType } from "@/app/components/CustomCursor";
 import { defaultTransitionEase } from "@/config/animations";
 import { CatBreed, CatBreedWithImage } from "@/models/cats";
-
-import CircularBreedViewText from "./CircularBreedViewText";
 
 const breedInfoTextVariants: Variants = {
   initial: { y: "150%" },
@@ -182,7 +181,10 @@ const HomeCatBreedContent = ({
             animate="animate"
             variants={!disableEnterAnimation ? circularTextVariants : undefined}
           >
-            <CircularBreedViewText />
+            <CircularText
+              centralText="VIDEO"
+              circularText={`CAPSULE SS ${new Date().getFullYear()}     CAPSULE SS ${new Date().getFullYear()}`}
+            />
           </motion.div>
         )}
       </div>

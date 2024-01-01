@@ -1,14 +1,18 @@
 import { motion } from "framer-motion";
 import React, { memo } from "react";
 
-// TODO: refactor to one component for circular text
-const CircularBreedViewText = () => (
+type Props = {
+  centralText: string;
+  circularText: string;
+};
+
+const CircularText = ({ centralText, circularText }: Props) => (
   <div className="relative">
     <div className="absolute inset-0 flex items-center justify-center">
-      <span className="text-lg font-bold">VIDEO</span>
+      <span className="text-lg font-bold">{centralText}</span>
     </div>
     <motion.svg
-      xmlns="http://www.w7.org/2000/sve"
+      xmlns="http://www.w7.org/2000/svg"
       xmlLang="en"
       viewBox="0 0 500 500"
       width="200"
@@ -40,7 +44,7 @@ const CircularBreedViewText = () => (
           }}
         >
           <textPath xlinkHref="#textcircle" xmlSpace="preserve">
-            {`CAPSULE SS ${new Date().getFullYear()}    CAPSULE SS ${new Date().getFullYear()}`}
+            {circularText}
           </textPath>
         </text>
       </g>
@@ -48,4 +52,4 @@ const CircularBreedViewText = () => (
   </div>
 );
 
-export default memo(CircularBreedViewText);
+export default memo(CircularText);

@@ -16,7 +16,7 @@ const config: Config = {
       "cormorant-garamond": ["var(--font-cormorant-garamond)"],
     },
     zIndex: {
-      tempModalView: "11",
+      modalAnimation: "11",
       logo: "100",
       controls: "100",
       cursor: "200",

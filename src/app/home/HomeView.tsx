@@ -3,6 +3,7 @@
 import classNames from "classnames";
 import {
   AnimatePresence,
+  Transition,
   motion,
   motionValue,
   useAnimationControls,
@@ -16,17 +17,22 @@ import { defaultTransitionEase } from "@/config/animations";
 import { useMouseMoveAnimation } from "@/hooks/useMouseMoveAnimation";
 import { CatBreed, CatBreedWithImage } from "@/models/cats";
 
+import CircularText from "../components/CircularText";
 import CustomCursor, { CustomCursorType } from "../components/CustomCursor";
 import Logo from "../components/Logo";
 
-import CircularIntroText from "./components/CircularIntroText";
 import HomeCatBreedModal, {
   HomeCatBreedInfo,
 } from "./components/HomeCatBreedModal";
-import IntroImage from "./components/IntroImage";
+import HomeIntroImage from "./components/HomeIntroImage";
 
 const SOCIALS = ["TW", "FB", "IG", "WECHAT"];
 const FOOTER_LINKS = ["Our website", "Our Collections"];
+
+const introTextTransition: Transition = {
+  ease: defaultTransitionEase,
+  duration: 1,
+};
 
 type Props = {
   breeds: CatBreed[];
@@ -76,6 +82,7 @@ const HomeView = ({ breeds }: Props) => {
     [breeds],
   );
 
+  // set Carousel constraints
   useEffect(() => {
     if (!carouselRef.current || !carouselContainerRef.current) return;
 
@@ -90,8 +97,8 @@ const HomeView = ({ breeds }: Props) => {
 
     setSelectedBreedInfo({ selectedBreed: breed, breedIndex: index });
   };
-
   //---
+
   const [cursorType, setCursorType] = useState<CustomCursorType>("hover");
 
   const introControls = useAnimationControls();
@@ -145,12 +152,9 @@ const HomeView = ({ breeds }: Props) => {
                 lineHeight: "30px",
                 rotateX: "0deg",
                 rotateY: "0deg",
-                transition: {
-                  ease: defaultTransitionEase,
-                  duration: 1,
-                },
               },
             }}
+            transition={introTextTransition}
             animate={introControls}
             style={{
               rotateX: introTextRotateX,
@@ -194,12 +198,9 @@ const HomeView = ({ breeds }: Props) => {
                 fontSize: "30px",
                 rotateX: "0deg",
                 rotateY: "0deg",
-                transition: {
-                  ease: defaultTransitionEase,
-                  duration: 1,
-                },
               },
             }}
+            transition={introTextTransition}
             animate={introControls}
             style={{
               rotateX: introTextRotateX,
@@ -219,26 +220,26 @@ const HomeView = ({ breeds }: Props) => {
               transformStyle: "preserve-3d",
             }}
           >
-            <IntroImage
+            <HomeIntroImage
               className="absolute left-[-180px] top-[16px] overflow-hidden"
               animationControls={introControls}
               imageSrc={breedsToShow[0].image.url}
               imageAlt={breedsToShow[0].name}
             />
-            <IntroImage
+            <HomeIntroImage
               className="absolute left-[110px] top-[280px] overflow-hidden"
               animationControls={introControls}
               imageSrc={breedsToShow[1].image.url}
               imageAlt={breedsToShow[1].name}
             />
-            <IntroImage
+            <HomeIntroImage
               className="absolute right-[70px] top-[380px] overflow-hidden"
               animationControls={introControls}
               imageSrc={breedsToShow[2].image.url}
               imageAlt={breedsToShow[2].name}
               isWide
             />
-            <IntroImage
+            <HomeIntroImage
               className="absolute right-[-220px] top-[16px] overflow-hidden"
               animationControls={introControls}
               imageSrc={breedsToShow[3].image.url}
@@ -263,12 +264,9 @@ const HomeView = ({ breeds }: Props) => {
                 fontSize: "30px",
                 rotateX: "0deg",
                 rotateY: "0deg",
-                transition: {
-                  ease: defaultTransitionEase,
-                  duration: 1,
-                },
               },
             }}
+            transition={introTextTransition}
             animate={introControls}
             style={{
               rotateX: introTextRotateX,
@@ -280,6 +278,7 @@ const HomeView = ({ breeds }: Props) => {
           </motion.h3>
         </div>
 
+        {/* Circular Text */}
         <motion.div
           className="absolute right-[-45px] top-[38%] flex items-center justify-center overflow-hidden"
           initial="initial"
@@ -295,10 +294,13 @@ const HomeView = ({ breeds }: Props) => {
           }}
           animate={introControls}
         >
-          <CircularIntroText />
+          <CircularText
+            centralText="PLAY"
+            circularText="BEHIND THE SCENE    BEHIND THE SCENE"
+          />
         </motion.div>
 
-        {/* Slides */}
+        {/* Carousel */}
         <div
           className="absolute top-[20%] flex h-2/3 w-screen items-center justify-end overflow-hidden"
           ref={carouselContainerRef}
@@ -388,12 +390,9 @@ const HomeView = ({ breeds }: Props) => {
               fontSize: "30px",
               rotateX: "0deg",
               rotateY: "0deg",
-              transition: {
-                ease: defaultTransitionEase,
-                duration: 1,
-              },
             },
           }}
+          transition={introTextTransition}
           animate={introControls}
           style={{
             rotateX: introTextRotateX,

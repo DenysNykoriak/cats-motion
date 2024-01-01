@@ -14,7 +14,7 @@ type Props = {
   isWide?: boolean;
 };
 
-const IntroImage = ({
+const HomeIntroImage = ({
   imageSrc,
   imageAlt,
   animationControls,
@@ -34,11 +34,11 @@ const IntroImage = ({
         },
         closeIntro: {
           y: "150%",
-          transition: {
-            ease: defaultTransitionEase,
-            duration: 1,
-          },
         },
+      }}
+      transition={{
+        ease: defaultTransitionEase,
+        duration: 1,
       }}
       animate={animationControls}
     >
@@ -52,4 +52,4 @@ const IntroImage = ({
   </div>
 );
 
-export default IntroImage;
+export default HomeIntroImage;

@@ -44,6 +44,6 @@ export interface CatBreed {
   };
 }
 
-export type CatBreedWithImage = CatBreed & {
+export type CatBreedWithImage = Omit<CatBreed, "image"> & {
   image: NonNullable<CatBreed["image"]>;
 };

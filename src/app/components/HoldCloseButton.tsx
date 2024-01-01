@@ -11,7 +11,7 @@ type Props = {
   onClose: () => void;
 };
 
-const CloseButton = ({ onClose }: Props) => {
+const HoldCloseButton = ({ onClose }: Props) => {
   const [holdTime, setHoldTime] = useState(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -43,7 +43,7 @@ const CloseButton = ({ onClose }: Props) => {
 
   return (
     <button
-      className="relative z-logo rounded-full p-2"
+      className="relative z-logo cursor-none rounded-full p-2"
       onMouseDown={startHoldCounter}
       onMouseUp={() => stopHoldCounter(true)}
       onMouseLeave={() => stopHoldCounter(true)}
@@ -59,4 +59,4 @@ const CloseButton = ({ onClose }: Props) => {
   );
 };
 
-export default CloseButton;
+export default HoldCloseButton;

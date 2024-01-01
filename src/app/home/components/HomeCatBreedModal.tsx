@@ -14,7 +14,7 @@ import { defaultTransitionEase } from "@/config/animations";
 import { useCatBreedImages } from "@/hooks/useCatBreedImages";
 import { CatBreedWithImage } from "@/models/cats";
 
-import CloseButton from "../../components/CloseButton";
+import HoldCloseButton from "../../components/HoldCloseButton";
 
 import HomeCatBreedContent from "./HomeCatBreedContent";
 
@@ -51,13 +51,13 @@ const HomeCatBreedModal = ({
     [selectedBreed.image, additionalBreedImages],
   );
 
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const activeImage = allBreedImages[activeImageIndex];
+
   const [imageAnimationPage, setImageAnimationPage] = useState<{
     image: CatBreedWithImage["image"];
     animationName: "nextPage" | "prevPage";
   } | null>(null);
-
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const activeImage = allBreedImages[activeImageIndex];
 
   const handleNextImage = () => {
     if (imageAnimationPage) return;
@@ -197,7 +197,7 @@ const HomeCatBreedModal = ({
           setCursorType={setCursorType}
         >
           <div className="absolute right-10 top-[56px] z-controls">
-            <CloseButton onClose={onClose} />
+            <HoldCloseButton onClose={onClose} />
           </div>
 
           {/* Arrows */}
@@ -315,30 +315,25 @@ const HomeCatBreedModal = ({
       {/* Image Change */}
       {imageAnimationPage && (
         <motion.div
-          className="absolute inset-y-0 z-tempModalView hidden flex-col overflow-hidden"
+          className="absolute inset-y-0 z-modalAnimation hidden flex-col overflow-hidden"
           variants={{
             nextPage: {
               display: "flex",
               right: "0%",
               left: ["100%", "0%"],
               alignItems: "end",
-              transition: {
-                duration: 0.9,
-                ease: defaultTransitionEase,
-                delay: 0.1,
-              },
             },
             prevPage: {
               display: "flex",
               left: "0%",
               right: ["100%", "0%"],
               alignItems: "start",
-              transition: {
-                duration: 0.9,
-                ease: defaultTransitionEase,
-                delay: 0.1,
-              },
             },
+          }}
+          transition={{
+            duration: 0.9,
+            ease: defaultTransitionEase,
+            delay: 0.1,
           }}
           animate={imageAnimationPage.animationName}
         >
