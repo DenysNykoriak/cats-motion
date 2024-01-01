@@ -1,12 +1,12 @@
-import { useMotionValue, useSpring } from "framer-motion";
+import { MotionValue, useMotionValue, useSpring } from "framer-motion";
 import { MouseEvent } from "react";
 
 export const useMouseMoveAnimation = () => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const mouseXSpring = useSpring(x);
-  const mouseYSpring = useSpring(y);
+  const mouseXSpring = useSpring(x) as MotionValue<number>;
+  const mouseYSpring = useSpring(y) as MotionValue<number>;
 
   const handleMouseMove = (e: MouseEvent) => {
     const mouseX = e.clientX;

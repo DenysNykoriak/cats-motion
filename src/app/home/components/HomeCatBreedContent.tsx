@@ -4,6 +4,7 @@ import React, { Fragment, ReactNode, useMemo } from "react";
 
 import Image from "next/image";
 
+import { CustomCursorType } from "@/app/components/CustomCursor";
 import { defaultTransitionEase } from "@/config/animations";
 import { CatBreed, CatBreedWithImage } from "@/models/cats";
 
@@ -61,6 +62,7 @@ type Props = {
   imageIndex: number;
   children?: ReactNode;
   disableEnterAnimation?: boolean;
+  setCursorType: (cursorType: CustomCursorType) => void;
 };
 
 const HomeCatBreedContent = ({
@@ -69,6 +71,7 @@ const HomeCatBreedContent = ({
   image,
   breed,
   disableEnterAnimation,
+  setCursorType,
 }: Props) => {
   const breedInfo = useMemo(
     () => [
@@ -149,7 +152,11 @@ const HomeCatBreedContent = ({
       </div>
 
       {/* Image */}
-      <div className="relative mr-[10vw] h-[80vh] w-[45vw]">
+      <div
+        className="relative mr-[10vw] h-[80vh] w-[45vw]"
+        onMouseEnter={() => setCursorType("discover")}
+        onMouseLeave={() => setCursorType("hover")}
+      >
         <motion.div
           className="z-[10] flex h-[80vh] w-[45vw] flex-col justify-center"
           initial="initial"

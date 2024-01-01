@@ -9,6 +9,7 @@ import React, {
 
 import Image from "next/image";
 
+import { CustomCursorType } from "@/app/components/CustomCursor";
 import { defaultTransitionEase } from "@/config/animations";
 import { useCatBreedImages } from "@/hooks/useCatBreedImages";
 import { CatBreedWithImage } from "@/models/cats";
@@ -25,6 +26,7 @@ export type HomeCatBreedInfo = {
 type Props = HomeCatBreedInfo & {
   onClose: () => void;
   imageRef: MutableRefObject<HTMLDivElement | null>;
+  setCursorType: (cursorType: CustomCursorType) => void;
 };
 
 const HomeCatBreedModal = ({
@@ -32,6 +34,7 @@ const HomeCatBreedModal = ({
   breedIndex,
   imageRef,
   onClose,
+  setCursorType,
 }: Props) => {
   const imageRect = useMemo(
     () => imageRef.current?.getBoundingClientRect(),
@@ -191,6 +194,7 @@ const HomeCatBreedModal = ({
           breed={selectedBreed}
           image={activeImage}
           imageIndex={breedIndex + activeImageIndex}
+          setCursorType={setCursorType}
         >
           <div className="absolute right-10 top-[56px] z-controls">
             <CloseButton onClose={onClose} />
@@ -199,14 +203,14 @@ const HomeCatBreedModal = ({
           {/* Arrows */}
           <>
             <button
-              className="absolute left-8 top-[45vh] z-controls font-cormorant-garamond text-3xl disabled:text-secondary"
+              className="absolute left-8 top-[45vh] z-controls cursor-none font-cormorant-garamond text-3xl disabled:text-secondary"
               disabled={activeImageIndex <= 0}
               onClick={handlePrevImage}
             >
               ←
             </button>
             <button
-              className="absolute right-8 top-[45vh] z-controls font-cormorant-garamond text-3xl disabled:text-secondary"
+              className="absolute right-8 top-[45vh] z-controls cursor-none font-cormorant-garamond text-3xl disabled:text-secondary"
               disabled={activeImageIndex >= allBreedImages.length - 1}
               onClick={handleNextImage}
             >
@@ -347,6 +351,7 @@ const HomeCatBreedModal = ({
               (imageAnimationPage.animationName === "nextPage" ? 1 : -1)
             }
             disableEnterAnimation
+            setCursorType={setCursorType}
           />
         </motion.div>
       )}

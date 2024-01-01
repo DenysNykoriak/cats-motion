@@ -48,7 +48,7 @@ const CloseButton = ({ onClose }: Props) => {
       onMouseUp={() => stopHoldCounter(true)}
       onMouseLeave={() => stopHoldCounter(true)}
     >
-      <div className="absolute left-0 top-0 cursor-pointer">
+      <div className="absolute left-0 top-0">
         <CircularProgressBarIcon
           size={44}
           progress={(holdTime * 100) / HOLD_TIME_LIMIT}

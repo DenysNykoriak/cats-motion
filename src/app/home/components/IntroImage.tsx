@@ -33,7 +33,7 @@ const IntroImage = ({
           y: "0%",
         },
         closeIntro: {
-          y: "100%",
+          y: "150%",
           transition: {
             ease: defaultTransitionEase,
             duration: 1,

@@ -16,6 +16,7 @@ import { defaultTransitionEase } from "@/config/animations";
 import { useMouseMoveAnimation } from "@/hooks/useMouseMoveAnimation";
 import { CatBreed, CatBreedWithImage } from "@/models/cats";
 
+import CustomCursor, { CustomCursorType } from "../components/CustomCursor";
 import Logo from "../components/Logo";
 
 import CircularIntroText from "./components/CircularIntroText";
@@ -91,6 +92,8 @@ const HomeView = ({ breeds }: Props) => {
   };
 
   //---
+  const [cursorType, setCursorType] = useState<CustomCursorType>("hover");
+
   const introControls = useAnimationControls();
 
   const handleIntroClose = () => {
@@ -98,24 +101,32 @@ const HomeView = ({ breeds }: Props) => {
       return;
     }
 
+    setCursorType("hover");
     setIsIntro(false);
     introControls.start("closeIntro");
   };
 
   return (
     <div
-      className="relative flex min-h-screen flex-col justify-between overflow-hidden"
+      className="relative flex min-h-screen cursor-none flex-col justify-between overflow-hidden"
       onClick={handleIntroClose}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      <header className="flex justify-between px-12 pt-14">
+      <header
+        className="flex justify-between px-12 pt-14"
+        onMouseEnter={() => setCursorType("hover")}
+        onMouseLeave={() => setCursorType("discover")}
+      >
         <Logo />
-        <span className="cursor-pointer">ABOUT</span>
+        <span>ABOUT</span>
       </header>
       <main>
         {/* Intro Center Components */}
-        <div className="relative mx-auto mt-[-200px] flex h-[40vh] w-[707px] flex-col items-start">
+        <div
+          className="relative mx-auto mt-[-200px] flex h-[40vh] w-[707px] flex-col items-start"
+          onMouseEnter={() => setCursorType("discover")}
+        >
           {/* Header Components (After Intro) */}
           <motion.h1
             className="relative font-lato font-bold tracking-wide"
@@ -309,7 +320,7 @@ const HomeView = ({ breeds }: Props) => {
             animate={introControls}
           >
             <motion.div
-              className="flex h-[66vh] cursor-grab items-center gap-12 px-12 active:cursor-grabbing"
+              className="flex h-[66vh] items-center gap-12 px-12"
               ref={carouselRef}
               drag="x"
               dragConstraints={{ right: 0, left: -catsCarouselWidth - 48 }}
@@ -329,6 +340,12 @@ const HomeView = ({ breeds }: Props) => {
               }}
               onDragEnd={() => {
                 setIsCarouselDragging(false);
+              }}
+              onMouseEnter={() => {
+                setCursorType("scroll");
+              }}
+              onMouseLeave={() => {
+                setCursorType("hover");
               }}
             >
               {breedsToShow.map((breed, index) => (
@@ -387,7 +404,11 @@ const HomeView = ({ breeds }: Props) => {
           CATS
         </motion.h3>
       </main>
-      <footer className="flex justify-between px-12 pb-8">
+      <footer
+        className="flex justify-between px-12 pb-8"
+        onMouseEnter={() => setCursorType("hover")}
+        onMouseLeave={() => setCursorType("discover")}
+      >
         <div className="ml-[120px] flex gap-8">
           {SOCIALS.map((socialName) => (
             <span key={socialName} className="font-lato">
@@ -400,7 +421,7 @@ const HomeView = ({ breeds }: Props) => {
             <span
               key={link}
               className={classNames(
-                "font-lato whitespace-nowrap relative cursor-pointer",
+                "font-lato whitespace-nowrap relative",
                 "after:w-full after:h-[1px] after:bg-primary after:bottom-[-4px] after:left-0 after:absolute",
               )}
             >
@@ -419,9 +440,12 @@ const HomeView = ({ breeds }: Props) => {
             onClose={() => {
               setSelectedBreedInfo(null);
             }}
+            setCursorType={setCursorType}
           />
         )}
       </AnimatePresence>
+
+      <CustomCursor cursorType={cursorType} />
     </div>
   );
 };

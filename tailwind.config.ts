@@ -19,6 +19,7 @@ const config: Config = {
       tempModalView: "11",
       logo: "100",
       controls: "100",
+      cursor: "200",
     },
     gridTemplateColumns: {
       catBreedInfo: "min-content 1fr",
