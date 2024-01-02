@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 
 import CircularProgressBarIcon from "./icons/CircularProgressBarIcon";
 import CloseIcon from "./icons/CloseIcon";
@@ -11,42 +11,33 @@ type Props = {
   onClose: () => void;
 };
 
-const HoldCloseButton = ({ onClose }: Props) => {
+const CloseButton = ({ onClose }: Props) => {
   const [holdTime, setHoldTime] = useState(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const startHoldCounter = () => {
     if (!intervalRef.current) {
       intervalRef.current = setInterval(() => {
-        setHoldTime((prev) => prev + HOLD_TIME_STEP);
+        setHoldTime((prev) => Math.min(prev + HOLD_TIME_STEP, HOLD_TIME_LIMIT));
       }, HOLD_TIME_MS_INTERVAL);
     }
   };
 
-  const stopHoldCounter = (resetCounter?: boolean) => {
+  const stopHoldCounter = () => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
-
-      if (resetCounter) {
-        setHoldTime(0);
-      }
     }
+
+    setHoldTime(0);
   };
-
-  useEffect(() => {
-    if (holdTime >= HOLD_TIME_LIMIT) {
-      stopHoldCounter();
-      onClose();
-    }
-  }, [holdTime, onClose]);
 
   return (
     <button
       className="relative z-logo cursor-none rounded-full p-2"
-      onMouseDown={startHoldCounter}
-      onMouseUp={() => stopHoldCounter(true)}
-      onMouseLeave={() => stopHoldCounter(true)}
+      onClick={onClose}
+      onMouseEnter={startHoldCounter}
+      onMouseLeave={stopHoldCounter}
     >
       <div className="absolute left-0 top-0">
         <CircularProgressBarIcon
@@ -59,4 +50,4 @@ const HoldCloseButton = ({ onClose }: Props) => {
   );
 };
 
-export default HoldCloseButton;
+export default CloseButton;

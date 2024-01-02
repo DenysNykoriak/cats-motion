@@ -14,7 +14,7 @@ import { defaultTransitionEase } from "@/config/animations";
 import { useCatBreedImages } from "@/hooks/useCatBreedImages";
 import { CatBreedWithImage } from "@/models/cats";
 
-import HoldCloseButton from "../../components/HoldCloseButton";
+import CloseButton from "../../components/CloseButton";
 
 import HomeCatBreedContent from "./HomeCatBreedContent";
 
@@ -197,7 +197,7 @@ const HomeCatBreedModal = ({
           setCursorType={setCursorType}
         >
           <div className="absolute right-10 top-[56px] z-controls">
-            <HoldCloseButton onClose={onClose} />
+            <CloseButton onClose={onClose} />
           </div>
 
           {/* Arrows */}
