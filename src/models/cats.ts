@@ -47,3 +47,8 @@ export interface CatBreed {
 export type CatBreedWithImage = Omit<CatBreed, "image"> & {
   image: NonNullable<CatBreed["image"]>;
 };
+
+export type CatBreedImagesMap = Record<
+  CatBreed["id"],
+  CatBreedWithImage["image"][]
+>;

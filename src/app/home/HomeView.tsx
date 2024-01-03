@@ -15,7 +15,8 @@ import Image from "next/image";
 
 import { defaultTransitionEase } from "@/config/animations";
 import { useMouseMoveAnimation } from "@/hooks/useMouseMoveAnimation";
-import { CatBreed, CatBreedWithImage } from "@/models/cats";
+import { usePreloadImages } from "@/hooks/usePreloadImages";
+import { CatBreed, CatBreedImagesMap, CatBreedWithImage } from "@/models/cats";
 
 import CircularText from "../components/CircularText";
 import CustomCursor, { CustomCursorType } from "../components/CustomCursor";
@@ -36,9 +37,10 @@ const introTextTransition: Transition = {
 
 type Props = {
   breeds: CatBreed[];
+  breedImages: CatBreedImagesMap;
 };
 
-const HomeView = ({ breeds }: Props) => {
+const HomeView = ({ breeds, breedImages }: Props) => {
   const [isIntro, setIsIntro] = useState(true);
 
   const { mouseXSpring, mouseYSpring, handleMouseMove, handleMouseLeave } =
@@ -74,13 +76,25 @@ const HomeView = ({ breeds }: Props) => {
   const [catsCarouselWidth, setCatsCarouselWidth] = useState(0);
 
   const [isCarouselDragging, setIsCarouselDragging] = useState(false);
+  const [carouselAnchorIndex, setCarouselAnchorIndex] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
   const carouselContainerRef = useRef<HTMLDivElement>(null);
+  const carouselItemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const breedsToShow = useMemo(
     () => breeds.filter((breed) => !!breed.image) as CatBreedWithImage[],
     [breeds],
   );
+
+  const carouselPreloadUrls = useMemo(
+    () =>
+      breedsToShow
+        .slice(carouselAnchorIndex, carouselAnchorIndex + 6)
+        .map((breed) => breed.image.url),
+    [breedsToShow, carouselAnchorIndex],
+  );
+
+  usePreloadImages(carouselPreloadUrls);
 
   // set Carousel constraints
   useEffect(() => {
@@ -91,6 +105,48 @@ const HomeView = ({ breeds }: Props) => {
         carouselContainerRef.current.offsetWidth,
     );
   }, [breeds]);
+
+  useEffect(() => {
+    if (isIntro) {
+      return;
+    }
+
+    const container = carouselContainerRef.current;
+    const items = carouselItemRefs.current.filter(Boolean);
+
+    if (!container || !items.length) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleIndexes = entries
+          .filter((entry) => entry.isIntersecting)
+          .map((entry) =>
+            Number((entry.target as HTMLElement).dataset.carouselIndex),
+          )
+          .filter((index) => !Number.isNaN(index));
+
+        if (!visibleIndexes.length) {
+          return;
+        }
+
+        setCarouselAnchorIndex(Math.min(...visibleIndexes));
+      },
+      {
+        root: container,
+        threshold: 0.25,
+      },
+    );
+
+    items.forEach((item) => {
+      if (item) {
+        observer.observe(item);
+      }
+    });
+
+    return () => observer.disconnect();
+  }, [isIntro, breedsToShow]);
 
   const handleSelectBreed = (breed: CatBreedWithImage, index: number) => {
     if (isCarouselDragging) return;
@@ -353,6 +409,10 @@ const HomeView = ({ breeds }: Props) => {
               {breedsToShow.map((breed, index) => (
                 <div
                   key={breed.id}
+                  ref={(element) => {
+                    carouselItemRefs.current[index] = element;
+                  }}
+                  data-carousel-index={index}
                   className={classNames(
                     "min-w-[32vw] relative bg-primary",
                     index % 2 === 0 ? "h-full" : "h-[90%]",
@@ -367,6 +427,9 @@ const HomeView = ({ breeds }: Props) => {
                     src={breed.image.url}
                     alt={breed.name}
                     fill
+                    loading={
+                      index <= carouselAnchorIndex + 5 ? "eager" : "lazy"
+                    }
                   />
                 </div>
               ))}
@@ -435,6 +498,7 @@ const HomeView = ({ breeds }: Props) => {
         {!!selectedBreedInfo && (
           <HomeCatBreedModal
             {...selectedBreedInfo}
+            breedImages={breedImages}
             imageRef={selectedBreedImageRef}
             onClose={() => {
               setSelectedBreedInfo(null);

@@ -11,8 +11,8 @@ import Image from "next/image";
 
 import { CustomCursorType } from "@/app/components/CustomCursor";
 import { defaultTransitionEase } from "@/config/animations";
-import { useCatBreedImages } from "@/hooks/useCatBreedImages";
-import { CatBreedWithImage } from "@/models/cats";
+import { usePreloadImages } from "@/hooks/usePreloadImages";
+import { CatBreedImagesMap, CatBreedWithImage } from "@/models/cats";
 
 import CloseButton from "../../components/CloseButton";
 
@@ -24,6 +24,7 @@ export type HomeCatBreedInfo = {
 };
 
 type Props = HomeCatBreedInfo & {
+  breedImages: CatBreedImagesMap;
   onClose: () => void;
   imageRef: MutableRefObject<HTMLDivElement | null>;
   setCursorType: (cursorType: CustomCursorType) => void;
@@ -32,6 +33,7 @@ type Props = HomeCatBreedInfo & {
 const HomeCatBreedModal = ({
   selectedBreed,
   breedIndex,
+  breedImages,
   imageRef,
   onClose,
   setCursorType,
@@ -41,18 +43,26 @@ const HomeCatBreedModal = ({
     [imageRef],
   );
 
-  const { images: additionalBreedImages } = useCatBreedImages(selectedBreed.id);
+  const allBreedImages = useMemo(() => {
+    const additionalBreedImages = breedImages[selectedBreed.id] ?? [];
 
-  const allBreedImages = useMemo(
-    () =>
-      [selectedBreed.image, ...additionalBreedImages].filter(
-        (image, index) => index === 0 || image.id !== selectedBreed.image.id,
-      ),
-    [selectedBreed.image, additionalBreedImages],
-  );
+    return [selectedBreed.image, ...additionalBreedImages].filter(
+      (image, index) => index === 0 || image.id !== selectedBreed.image.id,
+    );
+  }, [breedImages, selectedBreed.id, selectedBreed.image]);
 
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const activeImage = allBreedImages[activeImageIndex];
+
+  const breedPreloadUrls = useMemo(
+    () =>
+      allBreedImages
+        .slice(activeImageIndex, activeImageIndex + 5)
+        .map((image) => image.url),
+    [activeImageIndex, allBreedImages],
+  );
+
+  usePreloadImages(breedPreloadUrls);
 
   const [imageAnimationPage, setImageAnimationPage] = useState<{
     image: CatBreedWithImage["image"];
