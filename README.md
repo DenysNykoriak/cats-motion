@@ -14,15 +14,15 @@ The goal was to build a website that feels genuinely alive — one where every i
 
 ## Project structure
 
-| Directory / File                              | Description                                                                                                      |
-| --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| [src/app/](./src/app)                         | Next.js App Router pages and layout. `home/` contains the main view and carousel/modal components.              |
-| [src/app/components/](./src/app/components)   | Shared UI: custom cursor, circular spinning text, logo, close button, and icon primitives.                       |
-| [src/api/](./src/api)                         | Thin wrapper around The Cat API (axios).                                                                         |
-| [src/services/](./src/services)               | Build-time breed data fetching and image caching; manifest written to `public/cached-cats/`.                    |
-| [src/hooks/](./src/hooks)                     | `useMouseMoveAnimation` for 3D parallax, `usePreloadImages` for ahead-of-time carousel image loading.           |
-| [src/config/](./src/config)                   | Shared Framer Motion easing constants.                                                                           |
-| [scripts/](./scripts)                         | `cacheCatData.ts` — runs at prebuild to snapshot breed images locally so the app has no runtime API dependency. |
+| Directory / File                            | Description                                                                                                     |
+| ------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| [src/app/](./src/app)                       | Next.js App Router pages and layout. `home/` contains the main view and carousel/modal components.              |
+| [src/app/components/](./src/app/components) | Shared UI: custom cursor, circular spinning text, logo, close button, and icon primitives.                      |
+| [src/api/](./src/api)                       | Thin wrapper around The Cat API (axios).                                                                        |
+| [src/services/](./src/services)             | Build-time breed data fetching and image caching; manifest written to `public/cached-cats/`.                    |
+| [src/hooks/](./src/hooks)                   | `useMouseMoveAnimation` for 3D parallax, `usePreloadImages` for ahead-of-time carousel image loading.           |
+| [src/config/](./src/config)                 | Shared Framer Motion easing constants.                                                                          |
+| [scripts/](./scripts)                       | `cacheCatData.ts` — runs at prebuild to snapshot breed images locally so the app has no runtime API dependency. |
 
 ## Getting started
 
